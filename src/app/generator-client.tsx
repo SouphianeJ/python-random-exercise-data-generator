@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 
 import type { GeneratedDataset, GeneratorConfig } from "@/lib/generator/types";
+import { availableExamScenarioOptions } from "@/lib/generator/scenarios";
 
 const initialConfig: GeneratorConfig = {
   seed: 32,
@@ -14,11 +15,35 @@ const initialConfig: GeneratorConfig = {
   exportMode: "legacy-compatible-clean",
   includeAccessories: true,
   includeInterns: true,
+  examScenario: "none",
+  examScenarioStrength: "medium",
 };
+
+const examScenarioOptions = availableExamScenarioOptions();
 
 type GenerateResponse = {
   dataset: GeneratedDataset;
 };
+
+const downloadFiles = [
+  "magasins.csv",
+  "magasins.xlsx",
+  "employes.csv",
+  "employes.xlsx",
+  "articles.csv",
+  "articles.xlsx",
+  "clients.csv",
+  "clients.xlsx",
+  "ventes.csv",
+  "ventes.xlsx",
+  "ventes_filtre.csv",
+  "ventes_filtre.xlsx",
+  "ventes_exam.csv",
+  "ventes_exam.xlsx",
+  "store_month_costs.csv",
+  "store_month_costs.xlsx",
+  "canonical.json",
+] as const;
 
 function queryParams(config: GeneratorConfig, filename: string) {
   const params = new URLSearchParams({
@@ -30,8 +55,13 @@ function queryParams(config: GeneratorConfig, filename: string) {
     exportMode: config.exportMode,
     includeAccessories: String(config.includeAccessories),
     includeInterns: String(config.includeInterns),
+    examScenario: String(config.examScenario ?? "none"),
+    examScenarioStrength: String(config.examScenarioStrength ?? "medium"),
     file: filename,
   });
+  if (config.examScenarioStoreId) {
+    params.set("examScenarioStoreId", config.examScenarioStoreId);
+  }
   if (typeof config.targetSaleLineCount === "number") {
     params.set("targetSaleLineCount", String(config.targetSaleLineCount));
   }
@@ -111,13 +141,7 @@ export function GeneratorClient() {
   return (
     <div className="page-shell">
       <section className="hero">
-        <span className="eyebrow">Next.js rebuild</span>
-        <h1>Retail exercise data with coherent sales logic.</h1>
-        <p>
-          This generator reproduces the Python project intent with a stricter internal
-          model: ticket-level sales, valid line items, deterministic seeds, and documented
-          fixes for the old anomalies.
-        </p>
+        <span className="eyebrow">exercise data generator</span>
       </section>
 
       <div className="layout-grid">
@@ -212,6 +236,56 @@ export function GeneratorClient() {
                 onChange={(event) => update("includeInterns", event.target.checked)}
               />
             </label>
+            <div className="field">
+              <label htmlFor="examScenario">Exam scenario</label>
+              <select
+                id="examScenario"
+                value={config.examScenario ?? "none"}
+                onChange={(event) =>
+                  update("examScenario", event.target.value as GeneratorConfig["examScenario"])
+                }
+              >
+                {examScenarioOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="examScenarioStrength">Scenario strength</label>
+              <select
+                id="examScenarioStrength"
+                value={config.examScenarioStrength ?? "medium"}
+                onChange={(event) =>
+                  update(
+                    "examScenarioStrength",
+                    event.target.value as GeneratorConfig["examScenarioStrength"],
+                  )
+                }
+              >
+                <option value="light">light</option>
+                <option value="medium">medium</option>
+                <option value="strong">strong</option>
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="examScenarioStoreId">Scenario target store</label>
+              <select
+                id="examScenarioStoreId"
+                value={config.examScenarioStoreId ?? ""}
+                onChange={(event) =>
+                  update("examScenarioStoreId", event.target.value || undefined)
+                }
+              >
+                <option value="">auto</option>
+                {(dataset?.stores ?? []).map((store) => (
+                  <option key={store.id} value={store.id}>
+                    {store.id} - {store.type} - {store.zone}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="actions">
               <button className="primary-button" disabled={isPending} onClick={submit}>
                 {isPending ? "Generating..." : "Generate dataset"}
@@ -244,6 +318,23 @@ export function GeneratorClient() {
                 </p>
               </section>
 
+              {summary.examScenarioApplied ? (
+                <section className="panel card">
+                  <h2>Exam scenario</h2>
+                  <p className="muted">
+                    {summary.examScenarioApplied.label} on {summary.examScenarioApplied.targetStoreId} in{" "}
+                    {summary.examScenarioApplied.strength} mode.
+                  </p>
+                  <div className="warning-list">
+                    {summary.examScenarioApplied.expectedSignals.map((signal) => (
+                      <div className="validation-item" key={signal}>
+                        {signal}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ) : null}
+
               {summary.warnings.length > 0 ? (
                 <section className="panel card">
                   <h2>Warnings</h2>
@@ -275,15 +366,7 @@ export function GeneratorClient() {
               <section className="panel card">
                 <h2>Downloads</h2>
                 <div className="downloads">
-                  {[
-                    "magasins.csv",
-                    "employes.csv",
-                    "articles.csv",
-                    "clients.csv",
-                    "ventes.csv",
-                    "ventes_filtre.csv",
-                    "canonical.json",
-                  ].map((file) => (
+                  {downloadFiles.map((file) => (
                     <a className="download-link mono" href={queryParams(config, file)} key={file}>
                       {file}
                     </a>

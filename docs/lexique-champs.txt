@@ -1,0 +1,217 @@
+LEXIQUE DES CHAMPS
+==================
+
+Ce fichier décrit les champs présents dans les exports du générateur.
+
+
+MAGASINS.CSV
+------------
+
+store_id : identifiant unique du magasin.
+zone : zone du magasin, centre-ville ou périphérie.
+type : positionnement commercial du magasin, Premium, Standard ou Discount.
+surface : surface du magasin en m².
+hyper : indicateur simple de grand magasin, oui ou non.
+specialty_brands : marques principales vendues dans le magasin.
+open_time : durée d'ouverture client exprimée en nombre d'heures.
+open_to_clients_hours : plage d'ouverture affichée, par exemple 9h/19h.
+open_days : rythme d'ouverture hebdomadaire, 5 jours sur 7 ou 6 jours sur 7.
+foot_traffic_by_hour : trafic moyen estimé par heure d'ouverture.
+daily_foot_traffic : trafic moyen quotidien estimé.
+conversion_rate : part estimée des visiteurs qui achètent.
+traffic_conversion : nombre estimé de visiteurs convertis en acheteurs.
+avg_basket_value : panier moyen estimé du magasin.
+monthly_revenue_est : estimation de chiffre d'affaires mensuel.
+num_employees : nombre d'employés rattachés au magasin.
+
+
+EMPLOYES.CSV
+------------
+
+employee_id : identifiant unique de l'employé.
+nom_complet : nom complet simulé de l'employé.
+store_id : identifiant du magasin de rattachement.
+profile : profil commercial du vendeur.
+conversion_rate : taux de conversion individuel simulé.
+salary : salaire mensuel brut simulé.
+anciennete_mois : ancienneté en mois.
+hire_date : date d'embauche.
+role : rôle opérationnel, par exemple Manager, Sales, Support ou Apprentice.
+average_day_time_backoffice : part moyenne du temps passé en back-office.
+average_day_time_frontoffice : part moyenne du temps passé en front-office.
+
+
+ARTICLES.CSV
+------------
+
+product_id : identifiant export du produit.
+product_kind : type de produit, shoe ou accessory.
+brand : marque du produit.
+model : modèle commercial du produit.
+category : catégorie produit.
+color : couleur du produit.
+size : taille du produit.
+base_price : prix catalogue simulé avant ajustements magasin et remises.
+is_best_seller : indicateur best-seller.
+
+
+CLIENTS.CSV
+-----------
+
+customer_id : identifiant unique du client.
+genre : genre simulé du client.
+age : âge simulé du client.
+profile : profil d'achat du client.
+favorite_brand : marque favorite si le client est fidèle à une marque.
+has_loyalty_card : indicateur de possession d'une carte de fidélité.
+loyalty_points : stock actuel de points fidélité.
+
+
+VENTES.CSV
+----------
+
+Le fichier ventes.csv contient une ligne par ligne de ticket, pas une ligne par ticket.
+Plusieurs lignes peuvent partager le même sale_id quand plusieurs articles sont achetés dans le même panier.
+
+sale_id : identifiant du ticket de vente.
+line_id : identifiant unique de la ligne de vente.
+date : date de vente.
+time : heure de vente.
+store_id : identifiant du magasin.
+store_type : type du magasin.
+zone : zone du magasin.
+surface : surface du magasin.
+hyper : indicateur simple de grand magasin.
+specialty_brands : marques principales du magasin.
+open_time : durée d'ouverture client en heures.
+open_to_clients_hours : plage d'ouverture client affichée.
+open_days : rythme d'ouverture hebdomadaire.
+foot_traffic_by_hour : trafic moyen par heure du magasin.
+daily_foot_traffic : trafic quotidien estimé du magasin.
+nb_employees : nombre d'employés du magasin.
+employee_id : identifiant du vendeur associé au ticket.
+employee_profile : profil du vendeur.
+monthly_salary : salaire mensuel du vendeur.
+anciennete_mois : ancienneté du vendeur en mois.
+hire_date : date d'embauche du vendeur.
+job_role : rôle opérationnel du vendeur.
+average_day_time_backoffice : part moyenne de temps back-office du vendeur.
+average_day_time_frontoffice : part moyenne de temps front-office du vendeur.
+customer_id : identifiant du client.
+genre : genre du client.
+age : âge du client.
+favorite_brand : marque favorite du client si applicable.
+has_loyalty_card : possession de carte fidélité.
+customer_profile : profil du client.
+loyalty_points_used : points fidélité utilisés sur le ticket.
+loyalty_points_earned : points fidélité gagnés sur le ticket.
+product_id : identifiant export du produit vendu.
+product_kind : type du produit vendu, shoe ou accessory.
+brand : marque du produit vendu.
+category : catégorie du produit vendu.
+model : modèle du produit vendu.
+color : couleur du produit vendu.
+size : taille du produit vendu.
+price_sold : prix TTC payé sur la ligne.
+tva_rate : taux de TVA appliqué à la ligne.
+price_ht : prix HT de la ligne.
+tva_amount : montant de TVA de la ligne.
+loyalty_discount_ttc : part de remise liée à la fidélité sur la ligne.
+gross_price_ttc_before_loyalty : prix TTC de la ligne juste avant déduction fidélité.
+base_price : prix de base de la ligne après ajustement magasin, avant remises finales.
+is_best_seller : indicateur best-seller du produit vendu.
+total_discount_applied : total des remises appliquées sur la ligne.
+special_offer_discount : remise commerciale ponctuelle de type offre spéciale, newsletter ou code promo.
+discount_value_fidelity : remise liée aux points fidélité consommés.
+ajust_value_magasin : ajustement prix appliqué par le magasin en pourcentage.
+discount_val_month : remise liée à la saison, aux soldes ou au calendrier promotionnel.
+pct_economise : pourcentage économisé par rapport au prix de base ajusté magasin.
+year_month : mois comptable de la vente au format YYYY-MM.
+CA_month : chiffre d'affaires TTC du magasin sur le mois de la ligne.
+
+
+VENTES_FILTRE.CSV
+-----------------
+
+Version allégée de ventes.csv pour usage pédagogique.
+Les champs sont un sous-ensemble de ventes.csv.
+
+
+VENTES_EXAM.CSV
+---------------
+
+Version compacte orientée examen avec une ligne par ticket.
+Les achats supplémentaires d'un même panier sont ajoutés sur la même ligne avec des colonnes produit répétées.
+
+sale_id : identifiant du ticket.
+date : date de vente.
+time : heure de vente.
+store_id : identifiant du magasin.
+employee_id : identifiant du vendeur.
+customer_id : identifiant du client.
+line_count : nombre de lignes produits dans le ticket.
+sale_total_ttc : total TTC du ticket.
+sale_total_discount : total des remises du ticket.
+
+Colonnes produits répétées :
+product_1_id, product_2_id, product_3_id, ... : identifiant export du produit de chaque ligne du ticket.
+product_1_kind, product_2_kind, ... : type du produit de chaque ligne.
+product_1_brand, product_2_brand, ... : marque de chaque ligne.
+product_1_category, product_2_category, ... : catégorie de chaque ligne.
+product_1_model, product_2_model, ... : modèle de chaque ligne.
+product_1_size, product_2_size, ... : taille de chaque ligne.
+product_1_color, product_2_color, ... : couleur de chaque ligne.
+product_1_is_best_seller, product_2_is_best_seller, ... : indicateur best-seller pour chaque ligne.
+product_1_price_sold, product_2_price_sold, ... : prix TTC payé par ligne.
+product_1_base_price, product_2_base_price, ... : prix de base ajusté magasin par ligne.
+product_1_total_discount_applied, product_2_total_discount_applied, ... : total des remises par ligne.
+product_1_special_offer_discount, product_2_special_offer_discount, ... : remise commerciale ponctuelle par ligne.
+product_1_discount_value_fidelity, product_2_discount_value_fidelity, ... : remise fidélité par ligne.
+product_1_discount_val_month, product_2_discount_val_month, ... : remise de saison ou calendrier promo par ligne.
+product_1_pct_economise, product_2_pct_economise, ... : pourcentage économisé par ligne.
+
+
+STORE_MONTH_COSTS.CSV
+---------------------
+
+Fichier d'agrégation comptable par magasin et par mois.
+
+year_month : mois comptable au format YYYY-MM.
+store_id : identifiant du magasin.
+rent_month : loyer mensuel simulé.
+service_charges : charges locatives et copropriété.
+utilities : énergie et utilités.
+cleaning : coût de ménage.
+insurance : coût d'assurance.
+maintenance : coût de maintenance et petits travaux.
+software_it : coûts logiciels, caisse et IT.
+security : coût de sécurité si activé.
+gross_payroll : masse salariale brute du mois.
+employer_contrib : charges patronales simulées.
+payment_fees : frais de paiement carte et acquéreur.
+local_marketing : budget marketing local du mois.
+shrinkage : démarque inconnue, casse ou vol simulés.
+cfe_month : quote-part mensuelle de fiscalité locale simulée.
+loyalty_future_cost : coût comptable futur estimé des points fidélité gagnés.
+loyalty_discount_ttc : montant TTC de remises fidélité réellement utilisées.
+total_store_cost : total des charges du magasin pour le mois.
+ca_ttc : chiffre d'affaires TTC du magasin sur le mois.
+ca_ht : chiffre d'affaires HT du magasin sur le mois.
+nb_lines : nombre de lignes de vente du magasin sur le mois.
+
+
+PROFILS METIER
+--------------
+
+Profils vendeur :
+Requin : vendeur élite, très fort en conversion et en expansion de panier.
+Experimente : vendeur confirmé, performant et régulier.
+JeunePrometteur : vendeur en progression, intermédiaire.
+Stagiaire : junior ou alternant, contribution plus faible.
+Blase : vendeur moins engagé commercialement.
+
+Profils client :
+sneakerhead : attiré par les produits hype et premium.
+impulsif : sensible aux achats spontanés et aux ajouts au panier.
+chasseur_de_promos : orienté remises, promotions et fidélité.
+fidele_marque : revient surtout pour sa marque favorite.

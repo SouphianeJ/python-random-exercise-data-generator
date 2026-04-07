@@ -171,7 +171,7 @@ Observed columns:
 - `base_price`
 - `is_best_seller`
 - `total_discount_applied`
-- `discount_applied_profile`
+- `special_offer_discount`
 - `discount_value_fidelity`
 - `ajust_value_magasin`
 - `discount_val_month`

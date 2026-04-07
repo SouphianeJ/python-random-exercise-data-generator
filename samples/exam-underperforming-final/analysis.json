@@ -1,0 +1,44 @@
+{
+  "targetStoreId": "S02",
+  "controlStoreId": "S05",
+  "targetStore": {
+    "sales": 213,
+    "revenue": 26570.54,
+    "avgLinesPerTicket": 1.188,
+    "avgShoePrice": 114.036,
+    "accessoryAttachRate": 0.095,
+    "avgTenureMonths": 10.889,
+    "recentHireShare": 0.556
+  },
+  "controlStore": {
+    "sales": 307,
+    "revenue": 35415.22,
+    "avgLinesPerTicket": 1.202,
+    "avgShoePrice": 105.489,
+    "accessoryAttachRate": 0.111,
+    "avgTenureMonths": 106.222,
+    "recentHireShare": 0
+  },
+  "sellerAvg": {
+    "target": {
+      "ticketsPerEmployee": 23.667,
+      "revenuePerEmployee": 2952.282,
+      "linesPerTicket": 1.121,
+      "accessoryAttachRate": 0.049
+    },
+    "control": {
+      "ticketsPerEmployee": 34.111,
+      "revenuePerEmployee": 3935.024,
+      "linesPerTicket": 1.171,
+      "accessoryAttachRate": 0.088
+    }
+  },
+  "deltas": {
+    "sales": -94,
+    "revenuePct": -25,
+    "linesPerTicket": -0.014,
+    "accessoryAttachRate": -0.016,
+    "ticketsPerEmployeePct": -30.6,
+    "revenuePerEmployeePct": -25
+  }
+}

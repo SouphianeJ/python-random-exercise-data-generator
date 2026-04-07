@@ -2,12 +2,15 @@ import { SeededRandom } from "./random";
 import type {
   Customer,
   Employee,
+  EmployeeProfile,
   GeneratorConfig,
   Product,
+  ResolvedExamScenario,
   Sale,
   SaleLine,
   Store,
 } from "./types";
+import { modifiersForStore } from "./scenarios";
 import {
   formatDate,
   formatTime,
@@ -17,14 +20,38 @@ import {
   safeFavoriteBrand,
 } from "./utils";
 
-function monthDiscount(rng: SeededRandom, month: number, isBestSeller: boolean) {
+function monthDiscount(
+  rng: SeededRandom,
+  month: number,
+  isBestSeller: boolean,
+  monthDiscountMultiplier: number,
+) {
   if (isBestSeller) {
-    return rng.chance(0.02) ? rng.float(0.03, 0.08) : 0;
+    return rng.chance(0.02) ? rng.float(0.03, 0.08) * monthDiscountMultiplier : 0;
   }
   if ([1, 7].includes(month)) {
-    return rng.chance(0.22) ? rng.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.3]) : 0;
+    return rng.chance(0.22)
+      ? rng.choice([0.05, 0.1, 0.15, 0.2, 0.25, 0.3]) * monthDiscountMultiplier
+      : 0;
   }
-  return rng.chance(0.1) ? rng.choice([0.05, 0.1, 0.15, 0.2]) : 0;
+  return rng.chance(0.1) ? rng.choice([0.05, 0.1, 0.15, 0.2]) * monthDiscountMultiplier : 0;
+}
+
+function discountStorePriceRelief(store: Store, productKind: Product["kind"]) {
+  if (store.type !== "Discount") return 0;
+  if (productKind === "accessory") return 0.02;
+  return store.zone === "Peripherie" ? 0.045 : 0.035;
+}
+
+function normalizeDiscountShoePrice(store: Store, product: Product, adjustedBasePrice: number) {
+  if (store.type !== "Discount" || product.kind !== "shoe") {
+    return adjustedBasePrice;
+  }
+
+  // Discount stores should remain cheaper than other formats, but comparable
+  // discount stores should stay in a tighter shoe-price band.
+  const anchor = store.zone === "Peripherie" ? 108 : 114;
+  return roundCurrency(anchor + (adjustedBasePrice - anchor) * 0.5);
 }
 
 function pickCustomerForStoreWeighted(
@@ -78,6 +105,33 @@ function pickCustomerForStoreWeighted(
   return rng.weightedChoice(pool, weights);
 }
 
+function blendMultiplierTowardsNeutral(base: number, resilience: number) {
+  return 1 + (base - 1) * resilience;
+}
+
+function sellerScenarioMultiplier(
+  scenario: ResolvedExamScenario | undefined,
+  employeeProfile: EmployeeProfile,
+  base: number,
+) {
+  if (!scenario || scenario.presetId !== "underperforming_sales_execution") {
+    return base;
+  }
+
+  const resilience =
+    employeeProfile === "Requin"
+      ? 0.2
+      : employeeProfile === "Experimente"
+        ? 0.35
+        : employeeProfile === "JeunePrometteur"
+          ? 0.9
+          : employeeProfile === "Blase"
+            ? 1.05
+            : 1.1;
+
+  return blendMultiplierTowardsNeutral(base, resilience);
+}
+
 export function generateSales(
   rng: SeededRandom,
   config: GeneratorConfig,
@@ -85,6 +139,7 @@ export function generateSales(
   employees: Employee[],
   products: Product[],
   customers: Customer[],
+  examScenarioApplied?: ResolvedExamScenario,
 ) {
   const sales: Sale[] = [];
   const saleLines: SaleLine[] = [];
@@ -110,14 +165,31 @@ export function generateSales(
     employeesByStore.set(employee.storeId, bucket);
   }
 
+  const maxAttempts =
+    (typeof targetLines === "number" ? targetLines : targetSales ?? 1000) * 80;
+  let attempts = 0;
+
   while (true) {
+    attempts += 1;
+    if (attempts > maxAttempts) {
+      throw new Error("Generator could not reach the requested sales target within safe limits.");
+    }
     if (typeof targetSales === "number" && sales.length >= targetSales) break;
     if (typeof targetLines === "number" && saleLines.length >= targetLines) break;
 
     const store = rng.weightedChoice(
       stores,
-      stores.map((candidate) => candidate.dailyFootTraffic * candidate.conversionRate),
+      stores.map((candidate) => {
+        const modifiers = modifiersForStore(candidate.id, examScenarioApplied);
+        return (
+          candidate.dailyFootTraffic *
+          modifiers.trafficMultiplier *
+          candidate.conversionRate *
+          modifiers.conversionMultiplier
+        );
+      }),
     );
+    const storeModifiers = modifiersForStore(store.id, examScenarioApplied);
     const saleMoment = pickSaleDateTime(rng, config.year, store);
     const saleDate = formatDate(saleMoment);
     const yearMonth = monthKey(saleDate);
@@ -130,7 +202,23 @@ export function generateSales(
 
     const employee = rng.weightedChoice(
       eligibleEmployees,
-      eligibleEmployees.map((candidate) => candidate.conversionRate * candidate.salesWeight),
+      eligibleEmployees.map((candidate) => {
+        const effectiveFrontOffice = Math.max(
+          0.2,
+          candidate.workRatioFrontoffice + storeModifiers.frontOfficeEfficiencyShift,
+        );
+        const sellerEffectMultiplier = sellerScenarioMultiplier(
+          examScenarioApplied,
+          candidate.profile,
+          storeModifiers.sellerEffectMultiplier,
+        );
+        return (
+          candidate.conversionRate *
+          candidate.salesWeight *
+          sellerEffectMultiplier *
+          effectiveFrontOffice
+        );
+      }),
     );
     const customer = customerState.get(
       pickCustomerForStoreWeighted(
@@ -142,13 +230,19 @@ export function generateSales(
       ).id,
     )!;
     const loyalBrand = safeFavoriteBrand(store, customer);
+    const availableStoreBrands = store.specialtyBrands.filter(
+      (brand) => (shoesByBrand.get(brand) ?? []).length > 0,
+    );
+    const fallbackBrands = [...shoesByBrand.keys()];
+    const saleBrands = availableStoreBrands.length > 0 ? availableStoreBrands : fallbackBrands;
+    if (saleBrands.length === 0) continue;
     const chosenBrand =
       loyalBrand ??
       rng.weightedChoice(
-        store.specialtyBrands,
-        store.specialtyBrands.map((brand) => {
+        saleBrands,
+        saleBrands.map((brand) => {
           if (customer.profile === "sneakerhead" && ["Nike", "Jordans", "Adidas"].includes(brand)) {
-            return 1.4;
+            return 1.4 * storeModifiers.premiumMixMultiplier;
           }
           return 1;
         }),
@@ -163,7 +257,11 @@ export function generateSales(
       customer.profile === "sneakerhead" && hypeProducts.length > 0 && rng.chance(0.72)
         ? rng.choice(hypeProducts)
         : rng.choice(availableShoes);
-    if (employee.profile === "Requin" && hypeProducts.length > 0 && rng.chance(0.78)) {
+    if (
+      employee.profile === "Requin" &&
+      hypeProducts.length > 0 &&
+      rng.chance(Math.min(0.95, 0.78 * storeModifiers.premiumMixMultiplier))
+    ) {
       primaryProduct = rng.choice(hypeProducts);
     }
 
@@ -176,7 +274,12 @@ export function generateSales(
     if (customer.profile === "impulsif") extraShoeChance += 0.08;
     if (customer.profile === "chasseur_de_promos") extraShoeChance += 0.05;
     if (customer.profile === "fidele_marque") extraShoeChance += 0.04;
-    if (store.type === "Discount") extraShoeChance += 0.03;
+    if (store.type === "Discount") extraShoeChance += 0.07;
+    extraShoeChance *= sellerScenarioMultiplier(
+      examScenarioApplied,
+      employee.profile,
+      storeModifiers.basketLineMultiplier,
+    );
 
     if (rng.chance(Math.max(0.02, extraShoeChance))) {
       const secondShoePool = availableShoes.filter(
@@ -188,7 +291,7 @@ export function generateSales(
             secondShoePool.some(
               (product) => product.isBestSeller || product.category === "Limited Edition",
             ) &&
-            rng.chance(0.6)
+            rng.chance(Math.min(0.9, 0.6 * storeModifiers.premiumMixMultiplier))
             ? rng.choice(
                 secondShoePool.filter(
                   (product) => product.isBestSeller || product.category === "Limited Edition",
@@ -206,6 +309,11 @@ export function generateSales(
       if (customer.profile === "impulsif") accessoryChance += 0.12;
       if (customer.profile === "sneakerhead") accessoryChance += 0.04;
       if (employee.profile === "Stagiaire") accessoryChance -= 0.04;
+      accessoryChance *= sellerScenarioMultiplier(
+        examScenarioApplied,
+        employee.profile,
+        storeModifiers.accessoryAttachMultiplier,
+      );
 
       if (rng.chance(Math.max(0.03, accessoryChance))) {
         lineProducts.push(rng.choice(accessoryProducts));
@@ -218,16 +326,46 @@ export function generateSales(
     const saleId = `V${String(saleIndex).padStart(6, "0")}`;
     const preliminaryLines = lineProducts.map((product, offset) => {
       const basePrice = product.basePrice;
-      const adjustedBasePrice = roundCurrency(basePrice * (1 + store.priceAdjustmentPercent / 100));
-      const discountValueMonth = roundCurrency(
-        adjustedBasePrice * monthDiscount(rng, month, product.isBestSeller),
+      const adjustedBasePrice = normalizeDiscountShoePrice(
+        store,
+        product,
+        roundCurrency(
+          basePrice *
+            (1 + store.priceAdjustmentPercent / 100) *
+            (1 - discountStorePriceRelief(store, product.kind)),
+        ),
       );
-      let discountAppliedProfile = 0;
+      const discountValueMonth = roundCurrency(
+        adjustedBasePrice *
+          monthDiscount(
+            rng,
+            month,
+            product.isBestSeller,
+            storeModifiers.monthDiscountMultiplier,
+          ),
+      );
+      let specialOfferDiscount = 0;
       const pricedAfterMonth = adjustedBasePrice - discountValueMonth;
-      if (customer.profile === "chasseur_de_promos" && rng.chance(0.28)) {
-        discountAppliedProfile = roundCurrency(pricedAfterMonth * rng.float(0.08, 0.18, 3));
-      } else if (customer.profile !== "chasseur_de_promos" && rng.chance(0.05)) {
-        discountAppliedProfile = roundCurrency(pricedAfterMonth * rng.float(0.03, 0.1, 3));
+      if (
+        customer.profile === "chasseur_de_promos" &&
+        rng.chance(Math.min(0.75, 0.28 * storeModifiers.specialOfferMultiplier))
+      ) {
+        specialOfferDiscount = roundCurrency(
+          pricedAfterMonth *
+            rng.float(0.08, 0.18, 3) *
+            Math.min(1.5, storeModifiers.specialOfferMultiplier) *
+            (store.type === "Discount" ? 1.08 : 1),
+        );
+      } else if (
+        customer.profile !== "chasseur_de_promos" &&
+        rng.chance(Math.min(0.25, 0.05 * storeModifiers.specialOfferMultiplier))
+      ) {
+        specialOfferDiscount = roundCurrency(
+          pricedAfterMonth *
+            rng.float(0.03, 0.1, 3) *
+            Math.min(1.35, storeModifiers.specialOfferMultiplier) *
+            (store.type === "Discount" ? 1.05 : 1),
+        );
       }
 
       return {
@@ -244,7 +382,7 @@ export function generateSales(
         yearMonth,
         basePrice,
         adjustedBasePrice,
-        priceBeforeLoyalty: Math.max(1, roundCurrency(pricedAfterMonth - discountAppliedProfile)),
+        priceBeforeLoyalty: Math.max(1, roundCurrency(pricedAfterMonth - specialOfferDiscount)),
         isBestSeller: product.isBestSeller,
         brand: product.brand,
         category: product.category,
@@ -253,7 +391,7 @@ export function generateSales(
         size: product.size,
         storeAdjustmentPercent: store.priceAdjustmentPercent,
         discountValueMonth,
-        discountAppliedProfile,
+        specialOfferDiscount,
       };
     });
 
@@ -274,8 +412,11 @@ export function generateSales(
       remainingLoyalty = roundCurrency(remainingLoyalty - fidelity);
       const priceSold = roundCurrency(line.priceBeforeLoyalty - fidelity);
       const totalDiscountApplied = roundCurrency(
-        line.discountValueMonth + line.discountAppliedProfile + fidelity,
+        line.discountValueMonth + line.specialOfferDiscount + fidelity,
       );
+      const tvaRate = 0.2;
+      const priceHt = roundCurrency(priceSold / (1 + tvaRate));
+      const tvaAmount = roundCurrency(priceSold - priceHt);
       return {
         id: line.id,
         saleId: line.saleId,
@@ -299,12 +440,17 @@ export function generateSales(
         size: line.size,
         storeAdjustmentPercent: line.storeAdjustmentPercent,
         discountValueMonth: line.discountValueMonth,
-        discountAppliedProfile: line.discountAppliedProfile,
+        specialOfferDiscount: line.specialOfferDiscount,
         discountValueFidelity: fidelity,
         totalDiscountApplied,
         percentSaved: roundCurrency(
           line.adjustedBasePrice > 0 ? (1 - priceSold / line.adjustedBasePrice) * 100 : 0,
         ),
+        tvaRate,
+        priceHt,
+        tvaAmount,
+        loyaltyDiscountTtc: fidelity,
+        grossPriceTtcBeforeLoyalty: line.priceBeforeLoyalty,
       };
     });
 

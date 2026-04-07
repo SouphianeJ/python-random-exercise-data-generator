@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
 import { parseConfig } from "@/lib/generator/config";
-import { exportFiles } from "@/lib/generator/export";
+import { exportBinaryFile, exportFiles } from "@/lib/generator/export";
 import { generateDataset } from "@/lib/generator";
 
 export async function GET(request: Request) {
@@ -20,10 +20,13 @@ export async function GET(request: Request) {
       exportMode: searchParams.get("exportMode") ?? undefined,
       includeAccessories: searchParams.get("includeAccessories"),
       includeInterns: searchParams.get("includeInterns"),
+      examScenario: searchParams.get("examScenario") ?? undefined,
+      examScenarioStoreId: searchParams.get("examScenarioStoreId") ?? undefined,
+      examScenarioStrength: searchParams.get("examScenarioStrength") ?? undefined,
     });
     const dataset = generateDataset(config);
     const files = exportFiles(dataset);
-    const body = files[file as keyof typeof files];
+    const body = files[file as keyof typeof files] ?? (await exportBinaryFile(dataset, file));
 
     if (!body) {
       return new NextResponse("Unknown export file.", { status: 404 });
@@ -34,7 +37,9 @@ export async function GET(request: Request) {
       headers: {
         "Content-Type": file.endsWith(".json")
           ? "application/json; charset=utf-8"
-          : "text/csv; charset=utf-8",
+          : file.endsWith(".xlsx")
+            ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            : "text/csv; charset=utf-8",
         "Content-Disposition": `attachment; filename="${file}"`,
       },
     });

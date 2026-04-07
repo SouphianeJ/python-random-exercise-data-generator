@@ -6,15 +6,34 @@ import { generateEmployees } from "./employees";
 import { generateProducts } from "./products";
 import { generateCustomers } from "./customers";
 import { generateSales } from "./sales";
+import { generateStoreMonthCosts } from "./charges";
 import { summarizeDataset } from "./summary";
+import { applyScenarioToStores, resolveExamScenario } from "./scenarios";
 
 export function generateDataset(config: GeneratorConfig): GeneratedDataset {
   const rng = new SeededRandom(config.seed);
-  const stores = generateStores(rng, config);
-  const employees = generateEmployees(rng, config, stores);
+  const baseStores = generateStores(rng, config);
+  const examScenarioApplied = resolveExamScenario(config, baseStores);
+  const stores = applyScenarioToStores(baseStores, examScenarioApplied);
+  const employees = generateEmployees(rng, config, stores, examScenarioApplied);
   const products = generateProducts(rng, config);
   const customers = generateCustomers(rng, config);
-  const { sales, saleLines } = generateSales(rng, config, stores, employees, products, customers);
+  const { sales, saleLines } = generateSales(
+    rng,
+    config,
+    stores,
+    employees,
+    products,
+    customers,
+    examScenarioApplied,
+  );
+  const storeMonthCosts = generateStoreMonthCosts(
+    stores,
+    employees,
+    sales,
+    saleLines,
+    examScenarioApplied,
+  );
   const summary = summarizeDataset(
     config,
     stores,
@@ -23,6 +42,8 @@ export function generateDataset(config: GeneratorConfig): GeneratedDataset {
     customers,
     sales,
     saleLines,
+    storeMonthCosts,
+    examScenarioApplied,
   );
 
   return {
@@ -33,6 +54,8 @@ export function generateDataset(config: GeneratorConfig): GeneratedDataset {
     customers,
     sales,
     saleLines,
+    storeMonthCosts,
     summary,
+    examScenarioApplied,
   };
 }

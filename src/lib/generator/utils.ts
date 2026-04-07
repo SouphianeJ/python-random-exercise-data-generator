@@ -1,4 +1,4 @@
-import type { Customer, GeneratorConfig, Store } from "./types";
+import type { Customer, GeneratorConfig, ResolvedExamScenario, Store } from "./types";
 import { MONTH_FACTORS } from "./constants";
 import { SeededRandom } from "./random";
 
@@ -98,7 +98,7 @@ export function safeFavoriteBrand(store: Store, customer: Customer) {
   return null;
 }
 
-export function configWarnings(config: GeneratorConfig) {
+export function configWarnings(config: GeneratorConfig, examScenarioApplied?: ResolvedExamScenario) {
   const warnings: string[] = [];
   if (config.targetSaleLineCount && config.targetSaleLineCount > 8000) {
     warnings.push("Large line-count requests may make the browser preview slower.");
@@ -111,6 +111,11 @@ export function configWarnings(config: GeneratorConfig) {
   }
   if (!config.includeInterns) {
     warnings.push("Intern profiles are disabled to maximize realism consistency.");
+  }
+  if (examScenarioApplied) {
+    warnings.push(
+      `Exam scenario active: ${examScenarioApplied.label} on ${examScenarioApplied.targetStoreId}.`,
+    );
   }
   return warnings;
 }

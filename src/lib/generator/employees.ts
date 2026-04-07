@@ -4,6 +4,7 @@ import type {
   EmployeeProfile,
   EmployeeRole,
   GeneratorConfig,
+  ResolvedExamScenario,
   Store,
 } from "./types";
 import { diffMonths, formatDate, roundCurrency } from "./utils";
@@ -96,7 +97,63 @@ function employeeProfileSpec(
   };
 }
 
-export function generateEmployees(rng: SeededRandom, config: GeneratorConfig, stores: Store[]) {
+function adjustEmployeeForScenario(
+  employee: Employee,
+  rng: SeededRandom,
+  config: GeneratorConfig,
+  examScenarioApplied: ResolvedExamScenario | undefined,
+) {
+  if (
+    !examScenarioApplied ||
+    examScenarioApplied.presetId !== "underperforming_sales_execution" ||
+    employee.storeId !== examScenarioApplied.targetStoreId
+  ) {
+    return employee;
+  }
+
+  const salaryFactor =
+    employee.profile === "Requin"
+      ? rng.float(0.97, 0.99, 3)
+      : employee.profile === "Experimente"
+        ? rng.float(0.95, 0.98, 3)
+        : employee.profile === "JeunePrometteur"
+          ? rng.float(0.91, 0.95, 3)
+          : employee.profile === "Blase"
+            ? rng.float(0.9, 0.94, 3)
+            : rng.float(0.9, 0.93, 3);
+
+  const recentTenureCap =
+    employee.profile === "Requin"
+      ? 48
+      : employee.profile === "Experimente"
+        ? 36
+        : employee.profile === "JeunePrometteur"
+          ? 18
+          : employee.profile === "Blase"
+            ? 14
+            : 8;
+
+  const targetTenure = Math.min(employee.tenureMonths, rng.int(1, recentTenureCap));
+  const hireDate = new Date(
+    Date.UTC(config.year, 11 - targetTenure, rng.int(1, 28)),
+  );
+  const adjustedSalary = Math.max(650, Math.round(employee.salaryMonthly * salaryFactor));
+
+  return {
+    ...employee,
+    hireDate: formatDate(hireDate),
+    tenureMonths: diffMonths(formatDate(hireDate), new Date(Date.UTC(config.year, 11, 31))),
+    salaryMonthly: adjustedSalary,
+    salaryHourly: roundCurrency(adjustedSalary / (employee.role === "Apprentice" ? 70 : 145)),
+  };
+}
+
+export function generateEmployees(
+  rng: SeededRandom,
+  config: GeneratorConfig,
+  stores: Store[],
+  examScenarioApplied?: ResolvedExamScenario,
+) {
   const employees: Employee[] = [];
   let employeeIndex = 1;
 
@@ -127,7 +184,7 @@ export function generateEmployees(rng: SeededRandom, config: GeneratorConfig, st
             );
       const spec = employeeProfileSpec(profile, role, rng, config);
 
-      employees.push({
+      const employee = {
         id: `E${String(employeeIndex).padStart(4, "0")}`,
         fullName: generateEmployeeName(rng),
         storeId: store.id,
@@ -141,7 +198,8 @@ export function generateEmployees(rng: SeededRandom, config: GeneratorConfig, st
         workRatioBackoffice: spec.workRatioBackoffice,
         workRatioFrontoffice: spec.workRatioFrontoffice,
         salesWeight: spec.salesWeight,
-      });
+      };
+      employees.push(adjustEmployeeForScenario(employee, rng, config, examScenarioApplied));
       employeeIndex += 1;
     }
   }

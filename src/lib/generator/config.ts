@@ -16,6 +16,18 @@ const configSchema = z
       .default("legacy-compatible-clean"),
     includeAccessories: z.coerce.boolean().default(true),
     includeInterns: z.coerce.boolean().default(true),
+    examScenario: z
+      .enum([
+        "none",
+        "underperforming_sales_execution",
+        "understaffed_store",
+        "promo_dependency",
+        "premium_low_traffic",
+        "discount_volume_winner",
+      ])
+      .default("none"),
+    examScenarioStoreId: z.string().regex(/^S\d{2}$/).optional(),
+    examScenarioStrength: z.enum(["light", "medium", "strong"]).default("medium"),
   })
   .superRefine((config, ctx) => {
     const hasSaleCount = typeof config.targetSaleCount === "number";
@@ -52,4 +64,6 @@ export const defaultConfig: GeneratorConfig = {
   exportMode: "legacy-compatible-clean",
   includeAccessories: true,
   includeInterns: true,
+  examScenario: "none",
+  examScenarioStrength: "medium",
 };

@@ -14,8 +14,9 @@ function shuffleInPlace<T>(rng: SeededRandom, items: T[]) {
 
 function buildRepresentativeStoreBlueprints(
   rng: SeededRandom,
-  storeCount: number,
+  config: GeneratorConfig,
 ): Array<{ zone: Store["zone"]; type: StoreType }> {
+  const storeCount = config.storeCount;
   const blueprints: Array<{ zone: Store["zone"]; type: StoreType }> = [];
 
   if (storeCount >= 1) {
@@ -24,7 +25,13 @@ function buildRepresentativeStoreBlueprints(
   if (storeCount >= 2) {
     blueprints.push({ zone: "Peripherie", type: "Discount" });
   }
-  if (storeCount >= 3) {
+  if (config.examScenario === "underperforming_sales_execution" && storeCount >= 3) {
+    blueprints.push({ zone: "Peripherie", type: "Discount" });
+  }
+  if (
+    storeCount >= 3 &&
+    !(config.examScenario === "underperforming_sales_execution" && blueprints.length >= storeCount)
+  ) {
     blueprints.push({
       zone: rng.chance(0.55) ? "Centre-ville" : "Peripherie",
       type: "Standard",
@@ -48,7 +55,7 @@ function buildRepresentativeStoreBlueprints(
 
 export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
   const stores: Store[] = [];
-  const blueprints = buildRepresentativeStoreBlueprints(rng, config.storeCount);
+  const blueprints = buildRepresentativeStoreBlueprints(rng, config);
 
   for (let index = 1; index <= config.storeCount; index += 1) {
     const blueprint = blueprints[index - 1];
@@ -63,7 +70,9 @@ export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
               zone === "Centre-ville" ? Math.round(baseSurface * 0.95) : 110,
               zone === "Centre-ville" ? 130 : 180,
             )
-          : rng.int(zone === "Centre-ville" ? 110 : 150, zone === "Centre-ville" ? 160 : 310);
+          : config.examScenario === "underperforming_sales_execution" && zone === "Peripherie"
+            ? rng.int(220, 310)
+            : rng.int(zone === "Centre-ville" ? 110 : 150, zone === "Centre-ville" ? 160 : 310);
 
     const openToClientsHours =
       zone === "Centre-ville"
@@ -84,7 +93,7 @@ export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
       type === "Premium"
         ? surface / (zone === "Centre-ville" ? 7 : 8)
         : type === "Discount"
-          ? surface / (zone === "Centre-ville" ? 5.5 : 4.7)
+          ? surface / (zone === "Centre-ville" ? 5.15 : 4.35)
           : surface / 6.1;
     const footTrafficByHour = Math.max(5, Math.round(trafficBase + rng.normal(0, 2)));
     const dailyFootTraffic = footTrafficByHour * openTime;
@@ -111,8 +120,37 @@ export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
       type === "Premium"
         ? rng.weightedChoice([0, 4, 6, 8], [0.2, 0.35, 0.3, 0.15])
         : type === "Discount"
-          ? rng.weightedChoice([-10, -8, -5, -3], [0.18, 0.32, 0.32, 0.18])
+          ? rng.weightedChoice([-11, -10, -9, -8], [0.22, 0.34, 0.28, 0.16])
           : rng.weightedChoice([-2, 0, 2], [0.2, 0.6, 0.2]);
+    const microLocationFactor = rng.float(0.94, 1.08, 3);
+    const rentM2Month =
+      zone === "Centre-ville" ? rng.float(28, 40, 2) : rng.float(12, 18, 2);
+    const utilityM2Month =
+      zone === "Centre-ville" ? rng.float(2.8, 3.8, 2) : rng.float(2.4, 3.0, 2);
+    const energyEfficiencyFactor = rng.float(0.92, 1.08, 3);
+    const cardShare =
+      type === "Premium"
+        ? rng.float(0.8, 0.9, 3)
+        : type === "Discount" && zone === "Peripherie"
+          ? rng.float(0.55, 0.65, 3)
+          : rng.float(0.65, 0.75, 3);
+    const acquirerFeeRate = rng.float(0.0045, 0.0075, 4);
+    const securityEnabled =
+      type === "Premium" ||
+      zone === "Centre-ville" ||
+      surface > 180 ||
+      footTrafficByHour > 55;
+    const marketingFloor =
+      type === "Premium" ? rng.int(160, 250) : type === "Standard" ? rng.int(110, 180) : rng.int(80, 140);
+    const shrinkageRate =
+      type === "Premium"
+        ? rng.float(0.007, 0.012, 4)
+        : type === "Standard"
+          ? rng.float(0.004, 0.007, 4)
+          : zone === "Peripherie"
+            ? rng.float(0.002, 0.004, 4)
+            : rng.float(0.004, 0.006, 4);
+    const loyaltyRedemptionProb = rng.float(0.6, 0.75, 3);
 
     stores.push({
       id: `S${String(index).padStart(2, "0")}`,
@@ -132,6 +170,16 @@ export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
       monthlyRevenueEstimate: Math.round(dailyFootTraffic * conversionRate * avgBasketValue * 30),
       employeeCount,
       priceAdjustmentPercent,
+      microLocationFactor,
+      rentM2Month,
+      utilityM2Month,
+      energyEfficiencyFactor,
+      cardShare,
+      acquirerFeeRate,
+      securityEnabled,
+      marketingFloor,
+      shrinkageRate,
+      loyaltyRedemptionProb,
     });
   }
 

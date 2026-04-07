@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --import tsx --test tests/**/*.test.ts",
-    "sample": "tsx scripts/generate-representative-sample.ts"
+    "test": "node --import tsx --test tests/generator.test.ts tests/patterns.test.ts",
+    "sample": "tsx scripts/generate-representative-sample.ts",
+    "subjects": "tsx scripts/generate-subjects-workbook.ts"
   },
   "dependencies": {
+    "exceljs": "^4.4.0",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

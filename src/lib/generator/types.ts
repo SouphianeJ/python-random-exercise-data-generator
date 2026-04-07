@@ -1,4 +1,11 @@
 export type ExportMode = "canonical-json" | "legacy-compatible-clean";
+export type ExamScenarioPresetId =
+  | "underperforming_sales_execution"
+  | "understaffed_store"
+  | "promo_dependency"
+  | "premium_low_traffic"
+  | "discount_volume_winner";
+export type ExamScenarioStrength = "light" | "medium" | "strong";
 
 export type StoreType = "Premium" | "Standard" | "Discount";
 export type Zone = "Centre-ville" | "Peripherie";
@@ -27,6 +34,33 @@ export interface GeneratorConfig {
   exportMode: ExportMode;
   includeAccessories: boolean;
   includeInterns: boolean;
+  examScenario?: "none" | ExamScenarioPresetId;
+  examScenarioStoreId?: string;
+  examScenarioStrength?: ExamScenarioStrength;
+}
+
+export interface ScenarioDriverModifiers {
+  trafficMultiplier: number;
+  conversionMultiplier: number;
+  basketLineMultiplier: number;
+  accessoryAttachMultiplier: number;
+  specialOfferMultiplier: number;
+  monthDiscountMultiplier: number;
+  premiumMixMultiplier: number;
+  sellerEffectMultiplier: number;
+  frontOfficeEfficiencyShift: number;
+  openingHoursDelta: -1 | 0 | 1;
+  fixedCostPressureMultiplier: number;
+  marketingFloorMultiplier: number;
+}
+
+export interface ResolvedExamScenario {
+  presetId: ExamScenarioPresetId;
+  label: string;
+  strength: ExamScenarioStrength;
+  targetStoreId: string;
+  expectedSignals: string[];
+  activeModifiers: ScenarioDriverModifiers;
 }
 
 export interface Store {
@@ -47,6 +81,16 @@ export interface Store {
   monthlyRevenueEstimate: number;
   employeeCount: number;
   priceAdjustmentPercent: number;
+  microLocationFactor: number;
+  rentM2Month: number;
+  utilityM2Month: number;
+  energyEfficiencyFactor: number;
+  cardShare: number;
+  acquirerFeeRate: number;
+  securityEnabled: boolean;
+  marketingFloor: number;
+  shrinkageRate: number;
+  loyaltyRedemptionProb: number;
 }
 
 export interface Employee {
@@ -127,10 +171,40 @@ export interface SaleLine {
   size: string;
   storeAdjustmentPercent: number;
   discountValueMonth: number;
-  discountAppliedProfile: number;
+  specialOfferDiscount: number;
   discountValueFidelity: number;
   totalDiscountApplied: number;
   percentSaved: number;
+  tvaRate: number;
+  priceHt: number;
+  tvaAmount: number;
+  loyaltyDiscountTtc: number;
+  grossPriceTtcBeforeLoyalty: number;
+}
+
+export interface StoreMonthCost {
+  yearMonth: string;
+  storeId: string;
+  rentMonth: number;
+  serviceCharges: number;
+  utilities: number;
+  cleaning: number;
+  insurance: number;
+  maintenance: number;
+  softwareIt: number;
+  security: number;
+  grossPayroll: number;
+  employerContrib: number;
+  paymentFees: number;
+  localMarketing: number;
+  shrinkage: number;
+  cfeMonth: number;
+  loyaltyFutureCost: number;
+  loyaltyDiscountTtc: number;
+  totalStoreCost: number;
+  caTtc: number;
+  caHt: number;
+  nbLines: number;
 }
 
 export interface ValidationIssue {
@@ -147,6 +221,7 @@ export interface GeneratedDatasetSummary {
     customers: number;
     sales: number;
     saleLines: number;
+    storeMonthCosts: number;
   };
   monthlyRevenueTotals: Array<{
     storeId: string;
@@ -156,6 +231,14 @@ export interface GeneratedDatasetSummary {
   validationResults: ValidationIssue[];
   anomalyCount: number;
   warnings: string[];
+  examScenarioApplied?: {
+    presetId: ExamScenarioPresetId;
+    label: string;
+    strength: ExamScenarioStrength;
+    targetStoreId: string;
+    expectedSignals: string[];
+    activeModifiers: ScenarioDriverModifiers;
+  };
 }
 
 export interface GeneratedDataset {
@@ -166,5 +249,7 @@ export interface GeneratedDataset {
   customers: Customer[];
   sales: Sale[];
   saleLines: SaleLine[];
+  storeMonthCosts: StoreMonthCost[];
   summary: GeneratedDatasetSummary;
+  examScenarioApplied?: ResolvedExamScenario;
 }

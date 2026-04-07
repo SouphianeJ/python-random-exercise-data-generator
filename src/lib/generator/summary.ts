@@ -7,6 +7,8 @@ import type {
   Sale,
   SaleLine,
   Store,
+  StoreMonthCost,
+  ResolvedExamScenario,
 } from "./types";
 import { configWarnings, roundCurrency } from "./utils";
 import { validateDataset } from "./validate";
@@ -19,6 +21,8 @@ export function summarizeDataset(
   customers: Customer[],
   sales: Sale[],
   saleLines: SaleLine[],
+  storeMonthCosts: StoreMonthCost[],
+  examScenarioApplied?: ResolvedExamScenario,
 ) {
   const totals = new Map<string, number>();
   for (const line of saleLines) {
@@ -45,6 +49,7 @@ export function summarizeDataset(
     customers,
     sales,
     saleLines,
+    storeMonthCosts,
     summary: {
       counts: {
         stores: stores.length,
@@ -53,6 +58,7 @@ export function summarizeDataset(
         customers: customers.length,
         sales: sales.length,
         saleLines: saleLines.length,
+        storeMonthCosts: storeMonthCosts.length,
       },
       monthlyRevenueTotals,
       validationResults: [],
@@ -69,10 +75,12 @@ export function summarizeDataset(
       customers: customers.length,
       sales: sales.length,
       saleLines: saleLines.length,
+      storeMonthCosts: storeMonthCosts.length,
     },
     monthlyRevenueTotals,
     validationResults,
     anomalyCount: validationResults.filter((issue) => issue.severity === "error").length,
-    warnings: configWarnings(config),
+    warnings: configWarnings(config, examScenarioApplied),
+    examScenarioApplied,
   };
 }
