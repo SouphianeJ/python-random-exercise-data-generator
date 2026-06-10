@@ -1660,7 +1660,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 265
+      "loyaltyPoints": 103
     },
     {
       "id": "C0002",
@@ -1678,7 +1678,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 175
+      "loyaltyPoints": 218
     },
     {
       "id": "C0004",
@@ -1687,7 +1687,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 38
+      "loyaltyPoints": 18
     },
     {
       "id": "C0005",
@@ -1696,7 +1696,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 48
+      "loyaltyPoints": 93
     },
     {
       "id": "C0006",
@@ -1705,7 +1705,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 47
+      "loyaltyPoints": 173
     },
     {
       "id": "C0007",
@@ -1714,7 +1714,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 141
+      "loyaltyPoints": 77
     },
     {
       "id": "C0008",
@@ -1741,7 +1741,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Reebok",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 140
+      "loyaltyPoints": 230
     },
     {
       "id": "C0011",
@@ -1750,7 +1750,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Reebok",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 70
+      "loyaltyPoints": 86
     },
     {
       "id": "C0012",
@@ -1759,7 +1759,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 107
+      "loyaltyPoints": 299
     },
     {
       "id": "C0013",
@@ -1768,7 +1768,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 140
+      "loyaltyPoints": 204
     },
     {
       "id": "C0014",
@@ -1795,7 +1795,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 209
+      "loyaltyPoints": 48
     },
     {
       "id": "C0017",
@@ -1804,7 +1804,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 14
+      "loyaltyPoints": 161
     },
     {
       "id": "C0018",
@@ -1822,7 +1822,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 135
+      "loyaltyPoints": 81
     },
     {
       "id": "C0020",
@@ -1840,7 +1840,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 14
+      "loyaltyPoints": 105
     },
     {
       "id": "C0022",
@@ -1858,7 +1858,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 7
+      "loyaltyPoints": 116
     },
     {
       "id": "C0024",
@@ -1867,7 +1867,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 194
+      "loyaltyPoints": 115
     },
     {
       "id": "C0025",
@@ -1876,7 +1876,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 35
+      "loyaltyPoints": 95
     },
     {
       "id": "C0026",
@@ -1885,7 +1885,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 144
+      "loyaltyPoints": 166
     },
     {
       "id": "C0027",
@@ -1894,7 +1894,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 234
+      "loyaltyPoints": 52
     },
     {
       "id": "C0028",
@@ -1912,7 +1912,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Asics",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 31
+      "loyaltyPoints": 61
     },
     {
       "id": "C0030",
@@ -1930,7 +1930,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 32
+      "loyaltyPoints": 375
     },
     {
       "id": "C0032",
@@ -1939,7 +1939,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 162
+      "loyaltyPoints": 196
     },
     {
       "id": "C0033",
@@ -1948,7 +1948,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 201
+      "loyaltyPoints": 194
     },
     {
       "id": "C0034",
@@ -1957,7 +1957,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 263
+      "loyaltyPoints": 95
     },
     {
       "id": "C0035",
@@ -1975,7 +1975,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 43
+      "loyaltyPoints": 118
     },
     {
       "id": "C0037",
@@ -1984,7 +1984,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 181
+      "loyaltyPoints": 115
     },
     {
       "id": "C0038",
@@ -1993,7 +1993,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 219
+      "loyaltyPoints": 22
     },
     {
       "id": "C0039",
@@ -2002,7 +2002,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 159
+      "loyaltyPoints": 150
     },
     {
       "id": "C0040",
@@ -2020,7 +2020,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 144
+      "loyaltyPoints": 51
     },
     {
       "id": "C0042",
@@ -2029,7 +2029,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 94
+      "loyaltyPoints": 132
     },
     {
       "id": "C0043",
@@ -2047,7 +2047,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 102
+      "loyaltyPoints": 115
     },
     {
       "id": "C0045",
@@ -2056,7 +2056,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 40
+      "loyaltyPoints": 65
     },
     {
       "id": "C0046",
@@ -2065,7 +2065,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Puma",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 76
+      "loyaltyPoints": 12
     },
     {
       "id": "C0047",
@@ -2092,7 +2092,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 50
+      "loyaltyPoints": 51
     },
     {
       "id": "C0050",
@@ -2101,7 +2101,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 211
+      "loyaltyPoints": 75
     },
     {
       "id": "C0051",
@@ -2110,7 +2110,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 210
+      "loyaltyPoints": 26
     },
     {
       "id": "C0052",
@@ -2128,7 +2128,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 97
+      "loyaltyPoints": 338
     },
     {
       "id": "C0054",
@@ -2137,7 +2137,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 180
+      "loyaltyPoints": 48
     },
     {
       "id": "C0055",
@@ -2155,7 +2155,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 306
+      "loyaltyPoints": 14
     },
     {
       "id": "C0057",
@@ -2173,7 +2173,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 114
+      "loyaltyPoints": 140
     },
     {
       "id": "C0059",
@@ -2182,7 +2182,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Jordans",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 164
+      "loyaltyPoints": 77
     },
     {
       "id": "C0060",
@@ -2227,7 +2227,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 76
+      "loyaltyPoints": 41
     },
     {
       "id": "C0065",
@@ -2236,7 +2236,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 112
+      "loyaltyPoints": 367
     },
     {
       "id": "C0066",
@@ -2245,7 +2245,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 168
+      "loyaltyPoints": 196
     },
     {
       "id": "C0067",
@@ -2263,7 +2263,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 286
+      "loyaltyPoints": 127
     },
     {
       "id": "C0069",
@@ -2272,7 +2272,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 337
+      "loyaltyPoints": 64
     },
     {
       "id": "C0070",
@@ -2281,7 +2281,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 195
+      "loyaltyPoints": 142
     },
     {
       "id": "C0071",
@@ -2290,7 +2290,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Reebok",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 48
+      "loyaltyPoints": 79
     },
     {
       "id": "C0072",
@@ -2299,7 +2299,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Jordans",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 13
+      "loyaltyPoints": 33
     },
     {
       "id": "C0073",
@@ -2308,7 +2308,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 11
+      "loyaltyPoints": 32
     },
     {
       "id": "C0074",
@@ -2317,7 +2317,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 264
+      "loyaltyPoints": 52
     },
     {
       "id": "C0075",
@@ -2335,7 +2335,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 72
+      "loyaltyPoints": 194
     },
     {
       "id": "C0077",
@@ -2353,7 +2353,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 184
+      "loyaltyPoints": 14
     },
     {
       "id": "C0079",
@@ -2371,7 +2371,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 211
+      "loyaltyPoints": 79
     },
     {
       "id": "C0081",
@@ -2380,7 +2380,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 4
+      "loyaltyPoints": 229
     },
     {
       "id": "C0082",
@@ -2398,7 +2398,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 167
+      "loyaltyPoints": 20
     },
     {
       "id": "C0084",
@@ -2407,7 +2407,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 206
+      "loyaltyPoints": 142
     },
     {
       "id": "C0085",
@@ -2416,7 +2416,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 27
+      "loyaltyPoints": 163
     },
     {
       "id": "C0086",
@@ -2425,7 +2425,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 30
+      "loyaltyPoints": 47
     },
     {
       "id": "C0087",
@@ -2434,7 +2434,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 167
+      "loyaltyPoints": 284
     },
     {
       "id": "C0088",
@@ -2443,7 +2443,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 79
+      "loyaltyPoints": 68
     },
     {
       "id": "C0089",
@@ -2461,7 +2461,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 35
+      "loyaltyPoints": 58
     },
     {
       "id": "C0091",
@@ -2470,7 +2470,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 245
+      "loyaltyPoints": 105
     },
     {
       "id": "C0092",
@@ -2479,7 +2479,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 76
+      "loyaltyPoints": 146
     },
     {
       "id": "C0093",
@@ -2488,7 +2488,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 22
+      "loyaltyPoints": 69
     },
     {
       "id": "C0094",
@@ -2497,7 +2497,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 89
+      "loyaltyPoints": 203
     },
     {
       "id": "C0095",
@@ -2506,7 +2506,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 326
+      "loyaltyPoints": 57
     },
     {
       "id": "C0096",
@@ -2524,7 +2524,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 195
+      "loyaltyPoints": 73
     },
     {
       "id": "C0098",
@@ -2542,7 +2542,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 209
+      "loyaltyPoints": 394
     },
     {
       "id": "C0100",
@@ -2551,7 +2551,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 37
+      "loyaltyPoints": 265
     },
     {
       "id": "C0101",
@@ -2569,7 +2569,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 18
+      "loyaltyPoints": 153
     },
     {
       "id": "C0103",
@@ -2578,7 +2578,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 283
+      "loyaltyPoints": 44
     },
     {
       "id": "C0104",
@@ -2587,7 +2587,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 192
+      "loyaltyPoints": 301
     },
     {
       "id": "C0105",
@@ -2596,7 +2596,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 326
+      "loyaltyPoints": 61
     },
     {
       "id": "C0106",
@@ -2614,7 +2614,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 95
+      "loyaltyPoints": 223
     },
     {
       "id": "C0108",
@@ -2623,7 +2623,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 192
+      "loyaltyPoints": 81
     },
     {
       "id": "C0109",
@@ -2632,7 +2632,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 294
+      "loyaltyPoints": 69
     },
     {
       "id": "C0110",
@@ -2641,7 +2641,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 103
+      "loyaltyPoints": 14
     },
     {
       "id": "C0111",
@@ -2668,7 +2668,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 30
+      "loyaltyPoints": 91
     },
     {
       "id": "C0114",
@@ -2677,7 +2677,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 233
+      "loyaltyPoints": 21
     },
     {
       "id": "C0115",
@@ -2686,7 +2686,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Asics",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 128
+      "loyaltyPoints": 63
     },
     {
       "id": "C0116",
@@ -2704,7 +2704,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Jordans",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 131
+      "loyaltyPoints": 39
     },
     {
       "id": "C0118",
@@ -2731,7 +2731,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 136
+      "loyaltyPoints": 65
     },
     {
       "id": "C0121",
@@ -2740,7 +2740,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 163
+      "loyaltyPoints": 274
     },
     {
       "id": "C0122",
@@ -2749,7 +2749,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 159
+      "loyaltyPoints": 194
     },
     {
       "id": "C0123",
@@ -2758,7 +2758,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Reebok",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 106
+      "loyaltyPoints": 125
     },
     {
       "id": "C0124",
@@ -2767,7 +2767,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 164
+      "loyaltyPoints": 15
     },
     {
       "id": "C0125",
@@ -2776,7 +2776,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 177
+      "loyaltyPoints": 97
     },
     {
       "id": "C0126",
@@ -2785,7 +2785,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 62
+      "loyaltyPoints": 12
     },
     {
       "id": "C0127",
@@ -2794,7 +2794,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 270
+      "loyaltyPoints": 49
     },
     {
       "id": "C0128",
@@ -2812,7 +2812,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 193
+      "loyaltyPoints": 68
     },
     {
       "id": "C0130",
@@ -2830,7 +2830,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 199
+      "loyaltyPoints": 7
     },
     {
       "id": "C0132",
@@ -2857,7 +2857,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 32
+      "loyaltyPoints": 6
     },
     {
       "id": "C0135",
@@ -2866,7 +2866,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 121
+      "loyaltyPoints": 19
     },
     {
       "id": "C0136",
@@ -2893,7 +2893,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 53
+      "loyaltyPoints": 214
     },
     {
       "id": "C0139",
@@ -2902,7 +2902,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 68
+      "loyaltyPoints": 52
     },
     {
       "id": "C0140",
@@ -2911,7 +2911,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 225
+      "loyaltyPoints": 30
     },
     {
       "id": "C0141",
@@ -2920,7 +2920,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 222
+      "loyaltyPoints": 55
     },
     {
       "id": "C0142",
@@ -2929,7 +2929,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 135
+      "loyaltyPoints": 34
     },
     {
       "id": "C0143",
@@ -2938,7 +2938,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 138
+      "loyaltyPoints": 149
     },
     {
       "id": "C0144",
@@ -2947,7 +2947,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Jordans",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 91
+      "loyaltyPoints": 39
     },
     {
       "id": "C0145",
@@ -2965,7 +2965,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 64
+      "loyaltyPoints": 4
     },
     {
       "id": "C0147",
@@ -2974,7 +2974,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 151
+      "loyaltyPoints": 81
     },
     {
       "id": "C0148",
@@ -2992,7 +2992,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 45
+      "loyaltyPoints": 182
     },
     {
       "id": "C0150",
@@ -3019,7 +3019,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 188
+      "loyaltyPoints": 197
     },
     {
       "id": "C0153",
@@ -3028,7 +3028,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 102
+      "loyaltyPoints": 110
     },
     {
       "id": "C0154",
@@ -3037,7 +3037,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 12
+      "loyaltyPoints": 121
     },
     {
       "id": "C0155",
@@ -3046,7 +3046,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 143
+      "loyaltyPoints": 115
     },
     {
       "id": "C0156",
@@ -3064,7 +3064,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 144
+      "loyaltyPoints": 43
     },
     {
       "id": "C0158",
@@ -3073,7 +3073,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 144
+      "loyaltyPoints": 159
     },
     {
       "id": "C0159",
@@ -3100,7 +3100,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 265
+      "loyaltyPoints": 100
     },
     {
       "id": "C0162",
@@ -3109,7 +3109,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 167
+      "loyaltyPoints": 94
     },
     {
       "id": "C0163",
@@ -3118,7 +3118,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 159
+      "loyaltyPoints": 14
     },
     {
       "id": "C0164",
@@ -3136,7 +3136,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 68
+      "loyaltyPoints": 104
     },
     {
       "id": "C0166",
@@ -3145,7 +3145,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Asics",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 211
+      "loyaltyPoints": 294
     },
     {
       "id": "C0167",
@@ -3154,7 +3154,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 27
+      "loyaltyPoints": 15
     },
     {
       "id": "C0168",
@@ -3163,7 +3163,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Puma",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 44
+      "loyaltyPoints": 22
     },
     {
       "id": "C0169",
@@ -3172,7 +3172,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 122
+      "loyaltyPoints": 251
     },
     {
       "id": "C0170",
@@ -3190,7 +3190,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 226
+      "loyaltyPoints": 121
     },
     {
       "id": "C0172",
@@ -3199,7 +3199,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 88
+      "loyaltyPoints": 186
     },
     {
       "id": "C0173",
@@ -3208,7 +3208,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 180
+      "loyaltyPoints": 38
     },
     {
       "id": "C0174",
@@ -3217,7 +3217,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 42
+      "loyaltyPoints": 278
     },
     {
       "id": "C0175",
@@ -3226,7 +3226,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Jordans",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 126
+      "loyaltyPoints": 96
     },
     {
       "id": "C0176",
@@ -3235,7 +3235,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 162
+      "loyaltyPoints": 182
     },
     {
       "id": "C0177",
@@ -3244,7 +3244,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 208
+      "loyaltyPoints": 92
     },
     {
       "id": "C0178",
@@ -3253,7 +3253,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 30
+      "loyaltyPoints": 134
     },
     {
       "id": "C0179",
@@ -3289,7 +3289,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 92
+      "loyaltyPoints": 32
     },
     {
       "id": "C0183",
@@ -3325,7 +3325,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 317
+      "loyaltyPoints": 82
     },
     {
       "id": "C0187",
@@ -3334,7 +3334,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 145
+      "loyaltyPoints": 99
     },
     {
       "id": "C0188",
@@ -3343,7 +3343,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 57
+      "loyaltyPoints": 113
     },
     {
       "id": "C0189",
@@ -3352,7 +3352,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 177
+      "loyaltyPoints": 77
     },
     {
       "id": "C0190",
@@ -3361,7 +3361,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 219
+      "loyaltyPoints": 48
     },
     {
       "id": "C0191",
@@ -3370,7 +3370,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 137
+      "loyaltyPoints": 49
     },
     {
       "id": "C0192",
@@ -3388,7 +3388,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 205
+      "loyaltyPoints": 53
     },
     {
       "id": "C0194",
@@ -3397,7 +3397,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 4
+      "loyaltyPoints": 124
     },
     {
       "id": "C0195",
@@ -3406,7 +3406,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 69
+      "loyaltyPoints": 170
     },
     {
       "id": "C0196",
@@ -3424,7 +3424,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Asics",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 115
+      "loyaltyPoints": 223
     },
     {
       "id": "C0198",
@@ -3433,7 +3433,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 127
+      "loyaltyPoints": 88
     },
     {
       "id": "C0199",
@@ -3451,7 +3451,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 280
+      "loyaltyPoints": 46
     },
     {
       "id": "C0201",
@@ -3460,7 +3460,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 238
+      "loyaltyPoints": 123
     },
     {
       "id": "C0202",
@@ -3469,7 +3469,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 106
+      "loyaltyPoints": 164
     },
     {
       "id": "C0203",
@@ -3487,7 +3487,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 25
+      "loyaltyPoints": 193
     },
     {
       "id": "C0205",
@@ -3496,7 +3496,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 90
+      "loyaltyPoints": 77
     },
     {
       "id": "C0206",
@@ -3505,7 +3505,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 135
+      "loyaltyPoints": 273
     },
     {
       "id": "C0207",
@@ -3514,7 +3514,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 278
+      "loyaltyPoints": 57
     },
     {
       "id": "C0208",
@@ -3523,7 +3523,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 214
+      "loyaltyPoints": 37
     },
     {
       "id": "C0209",
@@ -3532,7 +3532,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 214
+      "loyaltyPoints": 132
     },
     {
       "id": "C0210",
@@ -3541,7 +3541,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 54
+      "loyaltyPoints": 276
     },
     {
       "id": "C0211",
@@ -3550,7 +3550,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 164
+      "loyaltyPoints": 41
     },
     {
       "id": "C0212",
@@ -3568,7 +3568,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 209
+      "loyaltyPoints": 44
     },
     {
       "id": "C0214",
@@ -3577,7 +3577,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 53
+      "loyaltyPoints": 191
     },
     {
       "id": "C0215",
@@ -3586,7 +3586,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 190
+      "loyaltyPoints": 45
     },
     {
       "id": "C0216",
@@ -3595,7 +3595,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Reebok",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 214
+      "loyaltyPoints": 405
     },
     {
       "id": "C0217",
@@ -3604,7 +3604,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 186
+      "loyaltyPoints": 72
     },
     {
       "id": "C0218",
@@ -3613,7 +3613,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 181
+      "loyaltyPoints": 140
     },
     {
       "id": "C0219",
@@ -3622,7 +3622,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 157
+      "loyaltyPoints": 75
     },
     {
       "id": "C0220",
@@ -3631,7 +3631,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 113
+      "loyaltyPoints": 107
     },
     {
       "id": "C0221",
@@ -3640,7 +3640,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 220
+      "loyaltyPoints": 235
     },
     {
       "id": "C0222",
@@ -3649,7 +3649,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 179
+      "loyaltyPoints": 68
     },
     {
       "id": "C0223",
@@ -3658,7 +3658,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 46
+      "loyaltyPoints": 89
     },
     {
       "id": "C0224",
@@ -3667,7 +3667,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Adidas",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 100
+      "loyaltyPoints": 112
     },
     {
       "id": "C0225",
@@ -3676,7 +3676,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 21
+      "loyaltyPoints": 26
     },
     {
       "id": "C0226",
@@ -3685,7 +3685,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 211
+      "loyaltyPoints": 119
     },
     {
       "id": "C0227",
@@ -3703,7 +3703,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 176
+      "loyaltyPoints": 309
     },
     {
       "id": "C0229",
@@ -3712,7 +3712,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 192
+      "loyaltyPoints": 53
     },
     {
       "id": "C0230",
@@ -3730,7 +3730,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 281
+      "loyaltyPoints": 185
     },
     {
       "id": "C0232",
@@ -3739,7 +3739,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 39
+      "loyaltyPoints": 102
     },
     {
       "id": "C0233",
@@ -3766,7 +3766,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Puma",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 42
+      "loyaltyPoints": 133
     },
     {
       "id": "C0236",
@@ -3793,7 +3793,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 19
+      "loyaltyPoints": 17
     },
     {
       "id": "C0239",
@@ -3802,7 +3802,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 169
+      "loyaltyPoints": 245
     },
     {
       "id": "C0240",
@@ -3811,7 +3811,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "New Balance",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 209
+      "loyaltyPoints": 144
     },
     {
       "id": "C0241",
@@ -3820,7 +3820,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 159
+      "loyaltyPoints": 150
     },
     {
       "id": "C0242",
@@ -3829,7 +3829,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 142
+      "loyaltyPoints": 80
     },
     {
       "id": "C0243",
@@ -3856,7 +3856,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Reebok",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 27
+      "loyaltyPoints": 92
     },
     {
       "id": "C0246",
@@ -3865,7 +3865,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 37
+      "loyaltyPoints": 159
     },
     {
       "id": "C0247",
@@ -3874,7 +3874,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 139
+      "loyaltyPoints": 201
     },
     {
       "id": "C0248",
@@ -3883,7 +3883,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 98
+      "loyaltyPoints": 334
     },
     {
       "id": "C0249",
@@ -3892,7 +3892,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 62
+      "loyaltyPoints": 153
     },
     {
       "id": "C0250",
@@ -3901,7 +3901,7 @@
       "profile": "fidele_marque",
       "favoriteBrand": "Puma",
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 218
+      "loyaltyPoints": 230
     },
     {
       "id": "C0251",
@@ -3919,7 +3919,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 32
+      "loyaltyPoints": 134
     },
     {
       "id": "C0253",
@@ -3928,7 +3928,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 43
+      "loyaltyPoints": 92
     },
     {
       "id": "C0254",
@@ -3955,7 +3955,7 @@
       "profile": "impulsif",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 88
+      "loyaltyPoints": 108
     },
     {
       "id": "C0257",
@@ -3964,7 +3964,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 166
+      "loyaltyPoints": 14
     },
     {
       "id": "C0258",
@@ -3973,7 +3973,7 @@
       "profile": "chasseur_de_promos",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 231
+      "loyaltyPoints": 84
     },
     {
       "id": "C0259",
@@ -3982,7 +3982,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 75
+      "loyaltyPoints": 119
     },
     {
       "id": "C0260",
@@ -3991,7 +3991,7 @@
       "profile": "sneakerhead",
       "favoriteBrand": null,
       "hasLoyaltyCard": true,
-      "loyaltyPoints": 43
+      "loyaltyPoints": 114
     }
   ],
   "sales": [

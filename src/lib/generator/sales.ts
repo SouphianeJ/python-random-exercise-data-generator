@@ -476,5 +476,14 @@ export function generateSales(
     }
   }
 
+  // Export the end-of-year balance so clients.csv reconciles with the points
+  // earned and used in ventes.csv over the simulated year.
+  for (const customer of customers) {
+    const finalState = customerState.get(customer.id);
+    if (finalState) {
+      customer.loyaltyPoints = finalState.loyaltyPoints;
+    }
+  }
+
   return { sales, saleLines };
 }

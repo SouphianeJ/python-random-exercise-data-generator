@@ -65,7 +65,7 @@ age : age simule du client.
 profile : profil d'achat du client.
 favorite_brand : marque favorite si le client est fidele a une marque.
 has_loyalty_card : indicateur de possession d'une carte de fidelite.
-loyalty_points : stock actuel de points fidelite.
+loyalty_points : stock de points fidelite a fin d'annee, apres les points gagnes et utilises sur les ventes simulees.
 
 
 VENTES.CSV

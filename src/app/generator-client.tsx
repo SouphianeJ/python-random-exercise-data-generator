@@ -394,9 +394,16 @@ export function GeneratorClient() {
 
               <section className="panel card">
                 <h2>Downloads</h2>
+                <p className="muted">
+                  Files match the previewed dataset, even if the form was edited since.
+                </p>
                 <div className="downloads">
                   {downloadFiles.map((file) => (
-                    <a className="download-link mono" href={queryParams(config, file)} key={file}>
+                    <a
+                      className="download-link mono"
+                      href={queryParams(dataset!.config, file)}
+                      key={file}
+                    >
                       {file}
                     </a>
                   ))}

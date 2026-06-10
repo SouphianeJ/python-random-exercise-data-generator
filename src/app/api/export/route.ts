@@ -4,6 +4,30 @@ import { ZodError } from "zod";
 import { parseConfig } from "@/lib/generator/config";
 import { exportBinaryFile, exportFiles } from "@/lib/generator/export";
 import { generateDataset } from "@/lib/generator";
+import type { GeneratedDataset, GeneratorConfig } from "@/lib/generator/types";
+
+// Generation is deterministic per config, and downloading the full file set
+// hits this route once per file. A small LRU avoids regenerating the dataset
+// for every download of the same configuration.
+const datasetCache = new Map<string, GeneratedDataset>();
+const DATASET_CACHE_LIMIT = 4;
+
+function datasetForConfig(config: GeneratorConfig) {
+  const key = JSON.stringify(config);
+  const cached = datasetCache.get(key);
+  if (cached) {
+    datasetCache.delete(key);
+    datasetCache.set(key, cached);
+    return cached;
+  }
+  const dataset = generateDataset(config);
+  datasetCache.set(key, dataset);
+  if (datasetCache.size > DATASET_CACHE_LIMIT) {
+    const oldest = datasetCache.keys().next().value;
+    if (oldest !== undefined) datasetCache.delete(oldest);
+  }
+  return dataset;
+}
 
 export async function GET(request: Request) {
   try {
@@ -28,7 +52,7 @@ export async function GET(request: Request) {
       includeInterns: searchParams.get("includeInterns"),
       storePerformancePlan,
     });
-    const dataset = generateDataset(config);
+    const dataset = datasetForConfig(config);
     const files = exportFiles(dataset);
     const body = files[file as keyof typeof files] ?? (await exportBinaryFile(dataset, file));
 

@@ -40,8 +40,10 @@ function styleHeaderRow(row: ExcelJS.Row) {
 
 export async function buildTableWorkbookBuffer(sheetName: string, rows: TableRow[]) {
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "Codex";
-  workbook.created = new Date();
+  workbook.creator = "exercise-data-generator";
+  // Fixed timestamp keeps xlsx output byte-stable for a given dataset.
+  workbook.created = new Date(Date.UTC(2024, 0, 1));
+  workbook.modified = workbook.created;
 
   const worksheet = workbook.addWorksheet(sheetName.slice(0, 31), {
     views: [{ state: "frozen", ySplit: 1 }],
