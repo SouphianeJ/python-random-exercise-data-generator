@@ -1,10 +1,11 @@
 import { SeededRandom } from "./random";
+import { performanceStatusForStore } from "./performance";
 import type {
   Employee,
   EmployeeProfile,
   EmployeeRole,
   GeneratorConfig,
-  ResolvedExamScenario,
+  ResolvedStorePerformancePlan,
   Store,
 } from "./types";
 import { diffMonths, formatDate, roundCurrency } from "./utils";
@@ -97,46 +98,104 @@ function employeeProfileSpec(
   };
 }
 
+function predecessorProfileFor(successor: Employee, rng: SeededRandom): EmployeeProfile {
+  if (successor.role === "Apprentice") return "Stagiaire";
+  return rng.weightedChoice<EmployeeProfile>(
+    ["JeunePrometteur", "Blase", "Experimente"],
+    [0.4, 0.35, 0.25],
+  );
+}
+
+// Turnover stores replace people during the year: each mid-year hire can have
+// a predecessor who held the same role and left shortly before the successor
+// arrived. Their pay and sales eligibility stop at endDate.
+function buildPredecessor(
+  successor: Employee,
+  rng: SeededRandom,
+  config: GeneratorConfig,
+  id: string,
+): Employee {
+  const profile = predecessorProfileFor(successor, rng);
+  const role = successor.role;
+  const spec = employeeProfileSpec(profile, role, rng, config);
+  const endDate = new Date(successor.hireDate);
+  endDate.setUTCDate(endDate.getUTCDate() - rng.int(7, 45));
+  const hireDate = new Date(endDate);
+  hireDate.setUTCMonth(hireDate.getUTCMonth() - rng.int(4, 18));
+
+  return {
+    id,
+    fullName: generateEmployeeName(rng),
+    storeId: successor.storeId,
+    profile,
+    role,
+    conversionRate: spec.conversionRate,
+    salaryMonthly: spec.salaryMonthly,
+    salaryHourly: spec.salaryHourly,
+    hireDate: formatDate(hireDate),
+    endDate: formatDate(endDate),
+    tenureMonths: diffMonths(formatDate(hireDate), endDate),
+    workRatioBackoffice: spec.workRatioBackoffice,
+    workRatioFrontoffice: spec.workRatioFrontoffice,
+    salesWeight: spec.salesWeight,
+  };
+}
+
 function adjustEmployeeForScenario(
   employee: Employee,
   rng: SeededRandom,
   config: GeneratorConfig,
-  examScenarioApplied: ResolvedExamScenario | undefined,
+  storePerformancePlan: ResolvedStorePerformancePlan | undefined,
 ) {
-  if (
-    !examScenarioApplied ||
-    examScenarioApplied.presetId !== "underperforming_sales_execution" ||
-    employee.storeId !== examScenarioApplied.targetStoreId
-  ) {
+  const status = performanceStatusForStore(employee.storeId, storePerformancePlan);
+
+  if (status === "neutre") {
     return employee;
   }
 
-  const salaryFactor =
-    employee.profile === "Requin"
+  const isTurnoverStatus =
+    status === "sous_performant_turnover" || status === "critique_turnover";
+  const salaryFactor = isTurnoverStatus
+    ? employee.profile === "Requin"
       ? rng.float(0.97, 0.99, 3)
       : employee.profile === "Experimente"
         ? rng.float(0.95, 0.98, 3)
         : employee.profile === "JeunePrometteur"
-          ? rng.float(0.91, 0.95, 3)
+          ? rng.float(0.9, 0.94, 3)
           : employee.profile === "Blase"
-            ? rng.float(0.9, 0.94, 3)
-            : rng.float(0.9, 0.93, 3);
+            ? rng.float(0.89, 0.93, 3)
+            : rng.float(0.88, 0.92, 3)
+    : status === "superperformant"
+      ? rng.float(1.02, 1.05, 3)
+      : rng.float(1, 1.02, 3);
 
-  const recentTenureCap =
-    employee.profile === "Requin"
-      ? 48
-      : employee.profile === "Experimente"
-        ? 36
-        : employee.profile === "JeunePrometteur"
-          ? 18
-          : employee.profile === "Blase"
-            ? 14
-            : 8;
+  const tenureCap =
+    status === "critique_turnover"
+      ? employee.profile === "Requin"
+        ? 32
+        : employee.profile === "Experimente"
+          ? 24
+          : employee.profile === "JeunePrometteur"
+            ? 12
+            : employee.profile === "Blase"
+              ? 8
+              : 5
+      : status === "sous_performant_turnover"
+        ? employee.profile === "Requin"
+          ? 48
+          : employee.profile === "Experimente"
+            ? 36
+            : employee.profile === "JeunePrometteur"
+              ? 18
+              : employee.profile === "Blase"
+                ? 14
+                : 8
+        : employee.tenureMonths + rng.int(4, 16);
 
-  const targetTenure = Math.min(employee.tenureMonths, rng.int(1, recentTenureCap));
-  const hireDate = new Date(
-    Date.UTC(config.year, 11 - targetTenure, rng.int(1, 28)),
-  );
+  const targetTenure = isTurnoverStatus
+    ? Math.min(employee.tenureMonths, rng.int(1, tenureCap))
+    : Math.max(employee.tenureMonths, tenureCap);
+  const hireDate = new Date(Date.UTC(config.year, 11 - targetTenure, rng.int(1, 28)));
   const adjustedSalary = Math.max(650, Math.round(employee.salaryMonthly * salaryFactor));
 
   return {
@@ -152,7 +211,7 @@ export function generateEmployees(
   rng: SeededRandom,
   config: GeneratorConfig,
   stores: Store[],
-  examScenarioApplied?: ResolvedExamScenario,
+  storePerformancePlan?: ResolvedStorePerformancePlan,
 ) {
   const employees: Employee[] = [];
   let employeeIndex = 1;
@@ -194,13 +253,26 @@ export function generateEmployees(
         salaryMonthly: spec.salaryMonthly,
         salaryHourly: spec.salaryHourly,
         hireDate: spec.hireDate,
+        endDate: null,
         tenureMonths: spec.tenureMonths,
         workRatioBackoffice: spec.workRatioBackoffice,
         workRatioFrontoffice: spec.workRatioFrontoffice,
         salesWeight: spec.salesWeight,
       };
-      employees.push(adjustEmployeeForScenario(employee, rng, config, examScenarioApplied));
+      const adjusted = adjustEmployeeForScenario(employee, rng, config, storePerformancePlan);
+      employees.push(adjusted);
       employeeIndex += 1;
+
+      const status = performanceStatusForStore(store.id, storePerformancePlan);
+      const isTurnoverStatus =
+        status === "sous_performant_turnover" || status === "critique_turnover";
+      const hiredDuringYear = adjusted.hireDate >= `${config.year}-01-01`;
+      if (isTurnoverStatus && hiredDuringYear && rng.chance(0.75)) {
+        employees.push(
+          buildPredecessor(adjusted, rng, config, `E${String(employeeIndex).padStart(4, "0")}`),
+        );
+        employeeIndex += 1;
+      }
     }
   }
 

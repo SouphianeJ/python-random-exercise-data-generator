@@ -1,73 +1,73 @@
 ﻿product_id;product_kind;brand;model;category;color;size;base_price;is_best_seller
-P001;shoe;Adidas;Zoom;Training;Classic Grey;31;91,8;true
-P002;shoe;Jordans;Air;Casual;Pink;41;139;false
-P003;shoe;Asics;Zoom;Casual;Black;41;85;false
-P004;shoe;Puma;Max;Running;White;38;110;false
-P005;shoe;Asics;Zoom;Casual;Gold;36;159;false
-P006;shoe;Asics;Pro;Limited Edition;Electric Blue;38;190;false
-P007;shoe;Jordans;Zoom;Running;Premium Black;44;99;false
-P008;shoe;Asics;Max;Training;Sunny Yellow;33;144;false
-P009;shoe;Puma;Pro;Training;Electric Blue;44;79;false
-P010;shoe;New Balance;Zoom;Basketball;Deep Purple;45;139;false
-P011;shoe;Reebok;Max;Trail;Red Blood;42;85;false
-P012;shoe;Reebok;Flex;Casual;Classic Grey;37;156,6;true
-P013;shoe;Puma;Pro;Trail;Light Green;45;85;false
-P014;shoe;Reebok;Flex;Trail;Sunny Yellow;37;110;false
-P015;shoe;Adidas;Pro;Basketball;Classic Grey;40;110;false
-P016;shoe;Nike;Max;Running;Classic Grey;43;169;false
-P017;shoe;Adidas;Air;Limited Edition;White;38;259;false
-P018;shoe;Nike;Elite;Training;White;43;85;false
-P019;shoe;Adidas;Elite;Training;Black;37;159;false
-P020;shoe;Asics;Zoom;Basketball;Black;41;171,72;true
-P021;shoe;Nike;Air;Basketball;Gold;45;165;false
-P022;shoe;Puma;Flex;Casual;Brown Bear;30;129,6;true
-P023;shoe;Jordans;Zoom;Training;Red Blood;37;91,8;true
-P024;shoe;New Balance;Max;Running;Premium Black;37;149;false
-P025;shoe;Puma;Zoom;Limited Edition;Red Blood;30;230;false
-P026;shoe;Asics;Flex;Limited Edition;Premium Black;40;275;false
-P027;shoe;Puma;Air;Basketball;Light Green;34;85;false
-P028;shoe;New Balance;Elite;Trail;White;42;159;false
-P029;shoe;Nike;Zoom;Casual;Classic Grey;37;169;false
-P030;shoe;Asics;Pro;Limited Edition;Deep Purple;33;178,2;true
-P031;shoe;Jordans;Air;Limited Edition;Brown Bear;45;249;false
-P032;shoe;Reebok;Pro;Basketball;Brown Bear;32;114;false
-P033;shoe;Adidas;Pro;Basketball;Brown Bear;38;85;false
-P034;shoe;New Balance;Zoom;Trail;Red Blood;32;104;false
-P035;shoe;Adidas;Zoom;Training;Sunny Yellow;45;60;false
-P036;shoe;New Balance;Max;Training;Pink;39;85;false
-P037;shoe;Nike;Zoom;Training;Premium Black;31;105;false
-P038;shoe;Reebok;Pro;Running;White;38;79;false
-P039;shoe;Adidas;Flex;Training;Light Green;35;144,72;true
-P040;shoe;New Balance;Pro;Running;Premium Black;32;105;false
-P041;shoe;Reebok;Max;Basketball;Deep Purple;34;54;false
-P042;shoe;Jordans;Flex;Running;Black;40;60;false
-P043;shoe;Nike;Elite;Training;Sunny Yellow;38;85;false
-P044;shoe;Adidas;Max;Basketball;Pink;31;60;false
-P045;shoe;Asics;Max;Training;Red Blood;31;85;false
-P046;shoe;Jordans;Pro;Running;Light Green;41;145;false
-P047;shoe;Jordans;Zoom;Casual;Pink;33;114;false
-P048;shoe;Reebok;Flex;Basketball;Pink;40;60;false
-P049;shoe;Puma;Elite;Casual;Classic Grey;40;169;false
-P050;shoe;New Balance;Pro;Training;Black;35;144,72;true
-P051;shoe;Puma;Air;Training;Gold;35;86,4;true
-P052;shoe;Jordans;Zoom;Casual;Black;38;129;false
-P053;shoe;New Balance;Flex;Casual;Premium Black;44;80;false
-P054;shoe;Asics;Zoom;Casual;Electric Blue;34;114;false
-P055;shoe;Jordans;Air;Limited Edition;Deep Purple;37;268,92;true
-P056;shoe;Reebok;Max;Casual;White;34;37,8;true
-P057;shoe;New Balance;Max;Trail;White;45;139;false
-P058;shoe;Reebok;Flex;Running;Gold;31;113,4;true
-P059;shoe;Nike;Flex;Limited Edition;White;31;224;false
-P060;shoe;New Balance;Elite;Trail;Sunny Yellow;45;85;false
-P061;shoe;Nike;Air;Trail;Gold;42;130;false
-P062;shoe;Reebok;Pro;Training;Light Green;35;35;false
-P063;shoe;Asics;Zoom;Basketball;Light Green;30;112,32;true
-P064;shoe;Reebok;Air;Trail;Red Blood;31;85;false
-A001;accessory;Accessoire;Tee-shirt;Tee-shirt;Black;M;15;false
-A002;accessory;Accessoire;Sac de sport;Sac de sport;Black;XL;30;false
-A003;accessory;Accessoire;Chaussettes;Chaussettes;White;M;25;false
-A004;accessory;Accessoire;Tee-shirt;Tee-shirt;White;XL;30;false
-A005;accessory;Accessoire;Bonnet;Bonnet;Classic Grey;S;25;false
-A006;accessory;Accessoire;Chaussettes;Chaussettes;Classic Grey;L;20;false
-A007;accessory;Accessoire;Bonnet;Bonnet;White;M;20;false
-A008;accessory;Accessoire;Lacets;Lacets;Black;XS;35;false
+P001;shoe;Adidas;Elite;Limited Edition;Gold;39;220;false
+P002;shoe;New Balance;Pro;Trail;Classic Grey;33;114;false
+P003;shoe;Reebok;Flex;Training;Deep Blue;41;60;false
+P004;shoe;Asics;Max;Limited Edition;Black;34;204;false
+P005;shoe;New Balance;Flex;Training;Gold;36;80;false
+P006;shoe;Puma;Elite;Casual;Premium Black;35;113,4;true
+P007;shoe;Nike;Elite;Limited Edition;Brown Bear;45;195;false
+P008;shoe;Jordans;Max;Casual;Brown Bear;44;156,6;true
+P009;shoe;Reebok;Max;Limited Edition;Sunny Yellow;34;230;false
+P010;shoe;Puma;Air;Training;White;43;169;false
+P011;shoe;Adidas;Air;Trail;Red Blood;43;91,8;true
+P012;shoe;Adidas;Zoom;Limited Edition;Black;41;229;false
+P013;shoe;Reebok;Elite;Running;Deep Blue;41;169;false
+P014;shoe;Reebok;Pro;Training;Red Blood;34;104;false
+P015;shoe;Nike;Air;Training;Light Green;37;159;false
+P016;shoe;Jordans;Pro;Running;Premium Black;42;159;false
+P017;shoe;Jordans;Max;Casual;Deep Purple;42;79;false
+P018;shoe;Adidas;Max;Basketball;Light Green;35;120;false
+P019;shoe;New Balance;Max;Trail;White;43;171,72;true
+P020;shoe;Reebok;Flex;Training;Classic Grey;45;60;false
+P021;shoe;Jordans;Elite;Basketball;Deep Blue;30;54;false
+P022;shoe;Jordans;Elite;Limited Edition;Black;40;195;false
+P023;shoe;Adidas;Elite;Running;Pink;38;60;false
+P024;shoe;Adidas;Elite;Casual;Gold;33;164;false
+P025;shoe;Asics;Pro;Running;Electric Blue;38;159;false
+P026;shoe;Puma;Flex;Limited Edition;Black;30;190;false
+P027;shoe;Puma;Zoom;Casual;Light Green;33;155,52;true
+P028;shoe;Reebok;Max;Running;Classic Grey;36;79;false
+P029;shoe;Nike;Max;Casual;Pink;32;114;false
+P030;shoe;Reebok;Max;Training;Deep Blue;43;79;false
+P031;shoe;Adidas;Max;Running;Deep Purple;36;110;false
+P032;shoe;Adidas;Zoom;Basketball;Gold;33;124;false
+P033;shoe;Adidas;Air;Casual;Brown Bear;30;129,6;true
+P034;shoe;Puma;Flex;Casual;Pink;34;85;false
+P035;shoe;Puma;Zoom;Running;Deep Purple;33;104;false
+P036;shoe;Puma;Pro;Running;Sunny Yellow;36;60;false
+P037;shoe;Nike;Max;Trail;Classic Grey;42;169;false
+P038;shoe;Asics;Zoom;Basketball;Premium Black;39;159;false
+P039;shoe;Adidas;Zoom;Casual;White;30;134;false
+P040;shoe;Asics;Flex;Casual;Light Green;45;79;false
+P041;shoe;Puma;Air;Training;Red Blood;42;85;false
+P042;shoe;Puma;Zoom;Training;Deep Blue;34;144;false
+P043;shoe;Reebok;Air;Casual;Brown Bear;37;129;false
+P044;shoe;Reebok;Max;Limited Edition;Deep Purple;31;230;false
+P045;shoe;Asics;Pro;Basketball;Classic Grey;39;85;false
+P046;shoe;New Balance;Elite;Training;Deep Blue;41;110;false
+P047;shoe;Reebok;Max;Basketball;Red Blood;31;85;false
+P048;shoe;New Balance;Max;Limited Edition;Premium Black;40;269;false
+P049;shoe;Nike;Zoom;Running;Deep Blue;35;123,12;true
+P050;shoe;New Balance;Max;Running;Light Green;41;159;false
+P051;shoe;Asics;Flex;Limited Edition;Black;34;183,6;true
+P052;shoe;New Balance;Zoom;Trail;Gold;35;74;false
+P053;shoe;Puma;Flex;Basketball;Light Green;31;144;false
+P054;shoe;Adidas;Max;Running;Red Blood;37;85;false
+P055;shoe;New Balance;Pro;Running;Light Green;37;139;false
+P056;shoe;Nike;Air;Casual;Pink;33;104;false
+P057;shoe;Reebok;Air;Training;Gold;44;159;false
+P058;shoe;Puma;Air;Trail;White;36;145;false
+P059;shoe;Puma;Air;Casual;Light Green;36;85,32;true
+P060;shoe;Nike;Elite;Casual;Classic Grey;42;60;false
+P061;shoe;Jordans;Zoom;Limited Edition;Pink;43;216;true
+P062;shoe;Adidas;Pro;Training;Gold;42;179;false
+P063;shoe;Reebok;Flex;Trail;Deep Blue;31;54;false
+P064;shoe;New Balance;Air;Running;Black;30;144;false
+A001;accessory;Accessoire;Lacets;Lacets;Classic Grey;XL;10;false
+A002;accessory;Accessoire;Lacets;Lacets;Deep Blue;S;10;false
+A003;accessory;Accessoire;Sac de sport;Sac de sport;Black;XL;40;false
+A004;accessory;Accessoire;Tee-shirt;Tee-shirt;White;XL;15;false
+A005;accessory;Accessoire;Lacets;Lacets;White;M;25;false
+A006;accessory;Accessoire;Bonnet;Bonnet;Deep Blue;XS;10;false
+A007;accessory;Accessoire;Chaussettes;Chaussettes;White;M;30;false
+A008;accessory;Accessoire;Tee-shirt;Tee-shirt;Black;M;20;false

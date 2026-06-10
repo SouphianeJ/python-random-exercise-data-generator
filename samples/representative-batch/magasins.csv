@@ -1,7 +1,7 @@
 ﻿store_id;zone;type;surface;hyper;specialty_brands;open_time;open_to_clients_hours;open_days;foot_traffic_by_hour;daily_foot_traffic;conversion_rate;traffic_conversion;avg_basket_value;monthly_revenue_est;num_employees
-S01;Peripherie;Discount;249;oui;Puma|Asics|Jordans;10;9h/19h;open 6/7;52;520;0,17;88;101;267852;8
-S02;Centre-ville;Standard;113;non;New Balance|Asics;9;9h/18h;open 5/7;21;189;0,21;40;127;151219;5
-S03;Centre-ville;Premium;55;non;Adidas;10;9h/19h;open 5/7;6;60;0,21;13;211;79758;4
-S04;Centre-ville;Standard;127;non;Puma|Jordans|New Balance|Reebok;9;9h/18h;open 6/7;23;207;0,19;39;134;158107;6
-S05;Peripherie;Standard;162;non;Jordans|Nike|Adidas;10;9h/19h;open 5/7;26;260;0,2;52;115;179400;7
-S06;Peripherie;Standard;110;non;Reebok|Adidas;9;9h/18h;open 5/7;17;153;0,17;26;153;119386;5
+S01;Peripherie;Discount;249;oui;Puma|Asics|Jordans;10;9h/19h;open 6/7;56;560;0,024;14;126;47441;8
+S02;Centre-ville;Standard;101;non;Puma|Adidas|Asics;10;9h/19h;open 5/7;19;190;0,03;6;153;20729;5
+S03;Centre-ville;Premium;71;non;New Balance;9;9h/18h;open 5/7;9;81;0,069;6;177;23582;5
+S04;Centre-ville;Standard;87;non;Puma|Adidas|New Balance|Asics;10;9h/19h;open 5/7;14;140;0,029;4;152;14112;5
+S05;Peripherie;Standard;171;non;Adidas|Puma|New Balance|Reebok;10;9h/19h;open 5/7;30;300;0,03;9;146;30861;7
+S06;Peripherie;Standard;141;non;Jordans|Puma;11;9h/20h;open 5/7;25;275;0,027;8;146;26023;6

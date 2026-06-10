@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 
 import type { GeneratedDataset, GeneratorConfig } from "@/lib/generator/types";
-import { availableExamScenarioOptions } from "@/lib/generator/scenarios";
+import { availableStorePerformanceStatuses } from "@/lib/generator/performance";
 
 const initialConfig: GeneratorConfig = {
   seed: 32,
@@ -11,15 +11,12 @@ const initialConfig: GeneratorConfig = {
   storeCount: 5,
   productCount: 100,
   customerCount: 1000,
-  targetSaleLineCount: 1500,
-  exportMode: "legacy-compatible-clean",
   includeAccessories: true,
   includeInterns: true,
-  examScenario: "none",
-  examScenarioStrength: "medium",
+  storePerformancePlan: [],
 };
 
-const examScenarioOptions = availableExamScenarioOptions();
+const performanceStatusOptions = availableStorePerformanceStatuses();
 
 type GenerateResponse = {
   dataset: GeneratedDataset;
@@ -52,21 +49,12 @@ function queryParams(config: GeneratorConfig, filename: string) {
     storeCount: String(config.storeCount),
     productCount: String(config.productCount),
     customerCount: String(config.customerCount),
-    exportMode: config.exportMode,
     includeAccessories: String(config.includeAccessories),
     includeInterns: String(config.includeInterns),
-    examScenario: String(config.examScenario ?? "none"),
-    examScenarioStrength: String(config.examScenarioStrength ?? "medium"),
     file: filename,
   });
-  if (config.examScenarioStoreId) {
-    params.set("examScenarioStoreId", config.examScenarioStoreId);
-  }
-  if (typeof config.targetSaleLineCount === "number") {
-    params.set("targetSaleLineCount", String(config.targetSaleLineCount));
-  }
-  if (typeof config.targetSaleCount === "number") {
-    params.set("targetSaleCount", String(config.targetSaleCount));
+  if ((config.storePerformancePlan?.length ?? 0) > 0) {
+    params.set("storePerformancePlan", JSON.stringify(config.storePerformancePlan));
   }
   return `/api/export?${params.toString()}`;
 }
@@ -117,6 +105,37 @@ export function GeneratorClient() {
 
   function update<K extends keyof GeneratorConfig>(key: K, value: GeneratorConfig[K]) {
     setConfig((current) => ({ ...current, [key]: value }));
+  }
+
+  function updatePerformanceRule(
+    index: number,
+    patch: Partial<NonNullable<GeneratorConfig["storePerformancePlan"]>[number]>,
+  ) {
+    setConfig((current) => ({
+      ...current,
+      storePerformancePlan: (current.storePerformancePlan ?? []).map((rule, ruleIndex) =>
+        ruleIndex === index ? { ...rule, ...patch } : rule,
+      ),
+    }));
+  }
+
+  function addPerformanceRule() {
+    setConfig((current) => ({
+      ...current,
+      storePerformancePlan: [
+        ...(current.storePerformancePlan ?? []),
+        { storeType: "Discount", performanceStatus: "sous_performant_turnover" },
+      ],
+    }));
+  }
+
+  function removePerformanceRule(index: number) {
+    setConfig((current) => ({
+      ...current,
+      storePerformancePlan: (current.storePerformancePlan ?? []).filter(
+        (_rule, ruleIndex) => ruleIndex !== index,
+      ),
+    }));
   }
 
   function submit() {
@@ -196,30 +215,6 @@ export function GeneratorClient() {
                 onChange={(event) => update("customerCount", Number(event.target.value))}
               />
             </div>
-            <div className="field">
-              <label htmlFor="targetSaleLineCount">Target sale lines</label>
-              <input
-                id="targetSaleLineCount"
-                type="number"
-                value={config.targetSaleLineCount ?? 0}
-                onChange={(event) =>
-                  update("targetSaleLineCount", Number(event.target.value) || undefined)
-                }
-              />
-            </div>
-            <div className="field">
-              <label htmlFor="exportMode">Export mode</label>
-              <select
-                id="exportMode"
-                value={config.exportMode}
-                onChange={(event) =>
-                  update("exportMode", event.target.value as GeneratorConfig["exportMode"])
-                }
-              >
-                <option value="legacy-compatible-clean">legacy-compatible-clean</option>
-                <option value="canonical-json">canonical-json</option>
-              </select>
-            </div>
             <label className="checkbox-row">
               <span>Include accessories</span>
               <input
@@ -236,56 +231,94 @@ export function GeneratorClient() {
                 onChange={(event) => update("includeInterns", event.target.checked)}
               />
             </label>
-            <div className="field">
-              <label htmlFor="examScenario">Exam scenario</label>
-              <select
-                id="examScenario"
-                value={config.examScenario ?? "none"}
-                onChange={(event) =>
-                  update("examScenario", event.target.value as GeneratorConfig["examScenario"])
-                }
-              >
-                {examScenarioOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
+            <section className="panel card">
+              <h2>Store performance</h2>
+              <p className="muted">
+                Annual sales volume is derived from each store profile and its performance status.
+              </p>
+              <div className="stack">
+                {(config.storePerformancePlan ?? []).map((rule, index) => (
+                  <div className="panel card" key={`rule-${index}`}>
+                    <div className="field">
+                      <label>Target store</label>
+                      <select
+                        value={rule.storeId ?? ""}
+                        onChange={(event) => {
+                          const storeId = event.target.value || undefined;
+                          const store = (dataset?.stores ?? []).find((entry) => entry.id === storeId);
+                          updatePerformanceRule(index, {
+                            storeId,
+                            storeType: store ? store.type : rule.storeType,
+                          });
+                        }}
+                      >
+                        <option value="">auto</option>
+                        {(dataset?.stores ?? []).map((store) => (
+                          <option key={store.id} value={store.id}>
+                            {store.id} - {store.type} - {store.zone}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="field">
+                      <label>Target type</label>
+                      <select
+                        value={rule.storeType ?? ""}
+                        onChange={(event) => {
+                          const storeType =
+                            (event.target.value as "Premium" | "Standard" | "Discount") ||
+                            undefined;
+                          const selectedStore = (dataset?.stores ?? []).find(
+                            (store) => store.id === rule.storeId,
+                          );
+                          updatePerformanceRule(index, {
+                            storeType,
+                            storeId:
+                              selectedStore && (!storeType || selectedStore.type === storeType)
+                                ? rule.storeId
+                                : undefined,
+                          });
+                        }}
+                      >
+                        <option value="">auto</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Discount">Discount</option>
+                      </select>
+                    </div>
+                    <div className="field">
+                      <label>Status</label>
+                      <select
+                        value={rule.performanceStatus}
+                        onChange={(event) =>
+                          updatePerformanceRule(index, {
+                            performanceStatus: event.target.value as NonNullable<
+                              GeneratorConfig["storePerformancePlan"]
+                            >[number]["performanceStatus"],
+                          })
+                        }
+                      >
+                        {performanceStatusOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <button
+                      type="button"
+                      className="download-link mono"
+                      onClick={() => removePerformanceRule(index)}
+                    >
+                      remove rule
+                    </button>
+                  </div>
                 ))}
-              </select>
-            </div>
-            <div className="field">
-              <label htmlFor="examScenarioStrength">Scenario strength</label>
-              <select
-                id="examScenarioStrength"
-                value={config.examScenarioStrength ?? "medium"}
-                onChange={(event) =>
-                  update(
-                    "examScenarioStrength",
-                    event.target.value as GeneratorConfig["examScenarioStrength"],
-                  )
-                }
-              >
-                <option value="light">light</option>
-                <option value="medium">medium</option>
-                <option value="strong">strong</option>
-              </select>
-            </div>
-            <div className="field">
-              <label htmlFor="examScenarioStoreId">Scenario target store</label>
-              <select
-                id="examScenarioStoreId"
-                value={config.examScenarioStoreId ?? ""}
-                onChange={(event) =>
-                  update("examScenarioStoreId", event.target.value || undefined)
-                }
-              >
-                <option value="">auto</option>
-                {(dataset?.stores ?? []).map((store) => (
-                  <option key={store.id} value={store.id}>
-                    {store.id} - {store.type} - {store.zone}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <button type="button" className="download-link mono" onClick={addPerformanceRule}>
+                  add performance rule
+                </button>
+              </div>
+            </section>
             <div className="actions">
               <button className="primary-button" disabled={isPending} onClick={submit}>
                 {isPending ? "Generating..." : "Generate dataset"}
@@ -318,17 +351,13 @@ export function GeneratorClient() {
                 </p>
               </section>
 
-              {summary.examScenarioApplied ? (
+              {summary.storePerformanceApplied.length > 0 ? (
                 <section className="panel card">
-                  <h2>Exam scenario</h2>
-                  <p className="muted">
-                    {summary.examScenarioApplied.label} on {summary.examScenarioApplied.targetStoreId} in{" "}
-                    {summary.examScenarioApplied.strength} mode.
-                  </p>
+                  <h2>Store performance plan</h2>
                   <div className="warning-list">
-                    {summary.examScenarioApplied.expectedSignals.map((signal) => (
-                      <div className="validation-item" key={signal}>
-                        {signal}
+                    {summary.storePerformanceApplied.map((entry) => (
+                      <div className="validation-item" key={`${entry.targetStoreId}-${entry.performanceStatus}`}>
+                        <strong>{entry.targetStoreId}</strong> {entry.label}
                       </div>
                     ))}
                   </div>

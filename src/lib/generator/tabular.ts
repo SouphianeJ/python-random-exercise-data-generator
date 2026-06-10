@@ -61,6 +61,7 @@ function employeesRows(employees: Employee[]) {
     salary: employee.salaryMonthly,
     anciennete_mois: employee.tenureMonths,
     hire_date: employee.hireDate,
+    end_date: employee.endDate,
     role: employee.role,
     average_day_time_backoffice: employee.workRatioBackoffice,
     average_day_time_frontoffice: employee.workRatioFrontoffice,
@@ -247,8 +248,9 @@ function examSalesRows(dataset: GeneratedDataset) {
       store_id: first.store_id,
       employee_id: first.employee_id,
       customer_id: first.customer_id,
-      line_count: lineRows.length,
-      sale_total_ttc: Number(lineRows.reduce((sum, row) => sum + Number(row.price_sold), 0).toFixed(2)),
+      article_count: lineRows.length,
+      sale_total_ht: "",
+      sale_total_ttc: "",
       sale_total_discount: Number(
         lineRows.reduce((sum, row) => sum + Number(row.total_discount_applied), 0).toFixed(2),
       ),
@@ -260,12 +262,9 @@ function examSalesRows(dataset: GeneratedDataset) {
       result[`product_${suffix}_id`] = line?.product_id;
       result[`product_${suffix}_kind`] = line?.product_kind;
       result[`product_${suffix}_brand`] = line?.brand;
-      result[`product_${suffix}_category`] = line?.category;
       result[`product_${suffix}_model`] = line?.model;
-      result[`product_${suffix}_size`] = line?.size;
-      result[`product_${suffix}_color`] = line?.color;
       result[`product_${suffix}_is_best_seller`] = line?.is_best_seller;
-      result[`product_${suffix}_price_sold`] = line?.price_sold;
+      result[`product_${suffix}_price_ht`] = line?.price_ht;
       result[`product_${suffix}_base_price`] = line?.base_price;
       result[`product_${suffix}_total_discount_applied`] = line?.total_discount_applied;
       result[`product_${suffix}_special_offer_discount`] = line?.special_offer_discount;

@@ -1,4 +1,26 @@
-import type { GeneratedDataset, ValidationIssue } from "./types";
+import type {
+  Customer,
+  Employee,
+  GeneratorConfig,
+  Product,
+  Sale,
+  SaleLine,
+  Store,
+  StoreMonthCost,
+  ValidationIssue,
+} from "./types";
+import { LOYALTY_POINT_VALUE_EUR } from "./economics";
+
+export interface DatasetValidationInput {
+  config: GeneratorConfig;
+  stores: Store[];
+  employees: Employee[];
+  products: Product[];
+  customers: Customer[];
+  sales: Sale[];
+  saleLines: SaleLine[];
+  storeMonthCosts: StoreMonthCost[];
+}
 
 function push(
   issues: ValidationIssue[],
@@ -9,7 +31,7 @@ function push(
   issues.push({ severity, code, message });
 }
 
-export function validateDataset(dataset: GeneratedDataset) {
+export function validateDataset(dataset: DatasetValidationInput) {
   const issues: ValidationIssue[] = [];
   const stores = new Map(dataset.stores.map((store) => [store.id, store]));
   const employees = new Map(dataset.employees.map((employee) => [employee.id, employee]));
@@ -29,8 +51,14 @@ export function validateDataset(dataset: GeneratedDataset) {
     const employee = employees.get(sale.employeeId);
     if (!employee) {
       push(issues, "error", "missing-employee", `Sale ${sale.id} references unknown employee ${sale.employeeId}`);
-    } else if (new Date(employee.hireDate) > new Date(`${sale.date}T${sale.time}:00.000Z`)) {
-      push(issues, "error", "sale-before-hire", `Sale ${sale.id} occurs before employee ${employee.id} hire date`);
+    } else {
+      const saleMoment = new Date(`${sale.date}T${sale.time}:00.000Z`);
+      if (new Date(employee.hireDate) > saleMoment) {
+        push(issues, "error", "sale-before-hire", `Sale ${sale.id} occurs before employee ${employee.id} hire date`);
+      }
+      if (employee.endDate && saleMoment > new Date(`${employee.endDate}T23:59:59.999Z`)) {
+        push(issues, "error", "sale-after-departure", `Sale ${sale.id} occurs after employee ${employee.id} departure date`);
+      }
     }
     if (!customers.has(sale.customerId)) {
       push(issues, "error", "missing-customer", `Sale ${sale.id} references unknown customer ${sale.customerId}`);
@@ -40,6 +68,7 @@ export function validateDataset(dataset: GeneratedDataset) {
     }
   }
 
+  const fidelityBySale = new Map<string, number>();
   for (const line of dataset.saleLines) {
     if (lineIds.has(line.id)) {
       push(issues, "error", "duplicate-line-id", `Duplicate line id detected: ${line.id}`);
@@ -56,6 +85,52 @@ export function validateDataset(dataset: GeneratedDataset) {
     }
     if (line.discountValueFidelity < 0) {
       push(issues, "error", "negative-fidelity-discount", `Line ${line.id} has a negative fidelity discount`);
+    }
+    fidelityBySale.set(
+      line.saleId,
+      (fidelityBySale.get(line.saleId) ?? 0) + line.discountValueFidelity,
+    );
+  }
+
+  for (const sale of dataset.sales) {
+    const appliedFidelity = fidelityBySale.get(sale.id) ?? 0;
+    const promisedFidelity = sale.loyaltyPointsUsed * LOYALTY_POINT_VALUE_EUR;
+    if (Math.abs(appliedFidelity - promisedFidelity) > 0.01) {
+      push(
+        issues,
+        "error",
+        "loyalty-points-mismatch",
+        `Sale ${sale.id} used ${sale.loyaltyPointsUsed} points but applied ${appliedFidelity.toFixed(2)} EUR of fidelity discount`,
+      );
+    }
+  }
+
+  for (const customer of dataset.customers) {
+    if (!customer.hasLoyaltyCard && customer.loyaltyPoints > 0) {
+      push(
+        issues,
+        "error",
+        "points-without-card",
+        `Customer ${customer.id} holds loyalty points without a loyalty card`,
+      );
+    }
+  }
+
+  const costMonthsByStore = new Map<string, Set<string>>();
+  for (const cost of dataset.storeMonthCosts) {
+    const months = costMonthsByStore.get(cost.storeId) ?? new Set<string>();
+    months.add(cost.yearMonth);
+    costMonthsByStore.set(cost.storeId, months);
+  }
+  for (const store of dataset.stores) {
+    const months = costMonthsByStore.get(store.id)?.size ?? 0;
+    if (months !== 12) {
+      push(
+        issues,
+        "error",
+        "missing-cost-month",
+        `Store ${store.id} has ${months} cost months instead of 12`,
+      );
     }
   }
 

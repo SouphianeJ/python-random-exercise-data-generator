@@ -8,16 +8,26 @@ import { generateCustomers } from "./customers";
 import { generateSales } from "./sales";
 import { generateStoreMonthCosts } from "./charges";
 import { summarizeDataset } from "./summary";
-import { applyScenarioToStores, resolveExamScenario } from "./scenarios";
+import { resolveStorePerformancePlan } from "./performance";
+import { applyStorePlanEstimates, buildStoreMonthlyVolumePlan } from "./volume";
 
 export function generateDataset(config: GeneratorConfig): GeneratedDataset {
   const rng = new SeededRandom(config.seed);
-  const baseStores = generateStores(rng, config);
-  const examScenarioApplied = resolveExamScenario(config, baseStores);
-  const stores = applyScenarioToStores(baseStores, examScenarioApplied);
-  const employees = generateEmployees(rng, config, stores, examScenarioApplied);
+  const stores = generateStores(rng, config);
+  const storePerformancePlan = resolveStorePerformancePlan(config, stores);
+  const employees = generateEmployees(rng, config, stores, storePerformancePlan);
   const products = generateProducts(rng, config);
   const customers = generateCustomers(rng, config);
+  const storeMonthlyVolumePlan = buildStoreMonthlyVolumePlan(
+    rng,
+    config,
+    stores,
+    employees,
+    customers,
+    products,
+    storePerformancePlan,
+  );
+  applyStorePlanEstimates(stores, storeMonthlyVolumePlan);
   const { sales, saleLines } = generateSales(
     rng,
     config,
@@ -25,14 +35,16 @@ export function generateDataset(config: GeneratorConfig): GeneratedDataset {
     employees,
     products,
     customers,
-    examScenarioApplied,
+    storeMonthlyVolumePlan,
+    storePerformancePlan,
   );
   const storeMonthCosts = generateStoreMonthCosts(
+    config.year,
     stores,
     employees,
     sales,
     saleLines,
-    examScenarioApplied,
+    storePerformancePlan,
   );
   const summary = summarizeDataset(
     config,
@@ -43,7 +55,8 @@ export function generateDataset(config: GeneratorConfig): GeneratedDataset {
     sales,
     saleLines,
     storeMonthCosts,
-    examScenarioApplied,
+    storeMonthlyVolumePlan,
+    storePerformancePlan.applied,
   );
 
   return {
@@ -55,7 +68,8 @@ export function generateDataset(config: GeneratorConfig): GeneratedDataset {
     sales,
     saleLines,
     storeMonthCosts,
+    storeMonthlyVolumePlan,
     summary,
-    examScenarioApplied,
+    storePerformanceApplied: storePerformancePlan.applied,
   };
 }

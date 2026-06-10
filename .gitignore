@@ -3,4 +3,5 @@ node_modules
 coverage
 dist
 *.log
+*.tsbuildinfo
 old_original_script/

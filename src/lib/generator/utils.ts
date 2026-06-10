@@ -1,4 +1,9 @@
-import type { Customer, GeneratorConfig, ResolvedExamScenario, Store } from "./types";
+import type {
+  Customer,
+  GeneratorConfig,
+  AppliedStorePerformance,
+  Store,
+} from "./types";
 import { MONTH_FACTORS } from "./constants";
 import { SeededRandom } from "./random";
 
@@ -68,11 +73,31 @@ export function pickOpenDate(
   }
 }
 
-export function pickSaleDateTime(rng: SeededRandom, year: number, store: Store) {
-  const month = rng.weightedChoice(
-    Object.keys(MONTH_FACTORS).map(Number),
-    Object.values(MONTH_FACTORS),
-  );
+export function openDaysInMonth(
+  year: number,
+  month: number,
+  openDays: Store["openDays"],
+) {
+  const allowedWeekdays = openDays === "open 6/7" ? [1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5];
+  const lastDay = new Date(Date.UTC(year, month, 0)).getUTCDate();
+  let count = 0;
+  for (let day = 1; day <= lastDay; day += 1) {
+    const date = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+    const weekday = date.getUTCDay();
+    const normalizedWeekday = weekday === 0 ? 7 : weekday;
+    if (allowedWeekdays.includes(normalizedWeekday)) {
+      count += 1;
+    }
+  }
+  return count;
+}
+
+export function pickSaleDateTimeForMonth(
+  rng: SeededRandom,
+  year: number,
+  month: number,
+  store: Store,
+) {
   const date = pickOpenDate(rng, year, store.openDays, month);
   const closingHour = parseClosingHour(store.openToClientsHours);
   const hour = rng.int(9, Math.max(9, closingHour - 1));
@@ -98,11 +123,11 @@ export function safeFavoriteBrand(store: Store, customer: Customer) {
   return null;
 }
 
-export function configWarnings(config: GeneratorConfig, examScenarioApplied?: ResolvedExamScenario) {
+export function configWarnings(
+  config: GeneratorConfig,
+  storePerformanceApplied: AppliedStorePerformance[],
+) {
   const warnings: string[] = [];
-  if (config.targetSaleLineCount && config.targetSaleLineCount > 8000) {
-    warnings.push("Large line-count requests may make the browser preview slower.");
-  }
   if (config.customerCount < config.storeCount * 20) {
     warnings.push("Low customer counts reduce diversity and repeat the same buyers often.");
   }
@@ -112,9 +137,9 @@ export function configWarnings(config: GeneratorConfig, examScenarioApplied?: Re
   if (!config.includeInterns) {
     warnings.push("Intern profiles are disabled to maximize realism consistency.");
   }
-  if (examScenarioApplied) {
+  if (storePerformanceApplied.length > 0) {
     warnings.push(
-      `Exam scenario active: ${examScenarioApplied.label} on ${examScenarioApplied.targetStoreId}.`,
+      `Store performance plan active on ${storePerformanceApplied.length} magasin(s).`,
     );
   }
   return warnings;

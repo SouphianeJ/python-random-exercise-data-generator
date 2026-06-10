@@ -5,10 +5,9 @@
     "storeCount": 6,
     "productCount": 72,
     "customerCount": 260,
-    "targetSaleLineCount": 480,
-    "exportMode": "legacy-compatible-clean",
     "includeAccessories": true,
-    "includeInterns": true
+    "includeInterns": true,
+    "storePerformancePlan": []
   },
   "storeTypes": [
     {
@@ -17,410 +16,415 @@
       "zone": "Peripherie",
       "surface": 249,
       "employeeCount": 8,
-      "footTrafficByHour": 52,
-      "avgBasketValue": 101
+      "footTrafficByHour": 56,
+      "avgBasketValue": 126
     },
     {
       "id": "S02",
       "type": "Standard",
       "zone": "Centre-ville",
-      "surface": 113,
+      "surface": 101,
       "employeeCount": 5,
-      "footTrafficByHour": 21,
-      "avgBasketValue": 127
+      "footTrafficByHour": 19,
+      "avgBasketValue": 153
     },
     {
       "id": "S03",
       "type": "Premium",
       "zone": "Centre-ville",
-      "surface": 55,
-      "employeeCount": 4,
-      "footTrafficByHour": 6,
-      "avgBasketValue": 211
+      "surface": 71,
+      "employeeCount": 5,
+      "footTrafficByHour": 9,
+      "avgBasketValue": 177
     },
     {
       "id": "S04",
       "type": "Standard",
       "zone": "Centre-ville",
-      "surface": 127,
-      "employeeCount": 6,
-      "footTrafficByHour": 23,
-      "avgBasketValue": 134
+      "surface": 87,
+      "employeeCount": 5,
+      "footTrafficByHour": 14,
+      "avgBasketValue": 152
     },
     {
       "id": "S05",
       "type": "Standard",
       "zone": "Peripherie",
-      "surface": 162,
+      "surface": 171,
       "employeeCount": 7,
-      "footTrafficByHour": 26,
-      "avgBasketValue": 115
+      "footTrafficByHour": 30,
+      "avgBasketValue": 146
     },
     {
       "id": "S06",
       "type": "Standard",
       "zone": "Peripherie",
-      "surface": 110,
-      "employeeCount": 5,
-      "footTrafficByHour": 17,
-      "avgBasketValue": 153
+      "surface": 141,
+      "employeeCount": 6,
+      "footTrafficByHour": 25,
+      "avgBasketValue": 146
     }
   ],
   "monthlyRevenueTotals": [
     {
       "storeId": "S01",
       "yearMonth": "2024-01",
-      "totalPaid": 961.27
+      "totalPaid": 41323.97
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-02",
-      "totalPaid": 1777.93
+      "totalPaid": 39005.81
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-03",
-      "totalPaid": 1427.28
+      "totalPaid": 49863.8
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-04",
-      "totalPaid": 3264.77
+      "totalPaid": 51289.22
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-05",
-      "totalPaid": 834.63
+      "totalPaid": 51452.86
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-06",
-      "totalPaid": 1538.46
+      "totalPaid": 45289.1
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-07",
-      "totalPaid": 1689.28
+      "totalPaid": 46352.24
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-08",
-      "totalPaid": 1191.48
+      "totalPaid": 43687.7
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-09",
-      "totalPaid": 1107.81
+      "totalPaid": 49692.47
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-10",
-      "totalPaid": 1309.09
+      "totalPaid": 57269.99
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-11",
-      "totalPaid": 2419.01
+      "totalPaid": 58265.57
     },
     {
       "storeId": "S01",
       "yearMonth": "2024-12",
-      "totalPaid": 1461.48
+      "totalPaid": 73391.09
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-01",
-      "totalPaid": 171.72
+      "totalPaid": 18768.55
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-02",
-      "totalPaid": 581.52
+      "totalPaid": 17109.61
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-03",
-      "totalPaid": 502.32
+      "totalPaid": 20533.23
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-04",
-      "totalPaid": 648.69
+      "totalPaid": 25161.22
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-05",
-      "totalPaid": 1325.6
+      "totalPaid": 23827.25
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-06",
-      "totalPaid": 777.11
+      "totalPaid": 21947.33
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-07",
-      "totalPaid": 748.24
+      "totalPaid": 22328.83
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-08",
-      "totalPaid": 114.45
+      "totalPaid": 22709.18
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-09",
-      "totalPaid": 794
+      "totalPaid": 24451.69
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-10",
-      "totalPaid": 511.23
+      "totalPaid": 26185.75
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-11",
-      "totalPaid": 485.4
+      "totalPaid": 28811.1
     },
     {
       "storeId": "S02",
       "yearMonth": "2024-12",
-      "totalPaid": 498.36
+      "totalPaid": 34144.87
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-01",
-      "totalPaid": 159.36
+      "totalPaid": 18675.8
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-02",
-      "totalPaid": 385.8
+      "totalPaid": 18916.83
+    },
+    {
+      "storeId": "S03",
+      "yearMonth": "2024-03",
+      "totalPaid": 21374.98
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-04",
-      "totalPaid": 302.6
+      "totalPaid": 25166.98
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-05",
-      "totalPaid": 296
+      "totalPaid": 22353.4
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-06",
-      "totalPaid": 144.72
+      "totalPaid": 20603.21
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-07",
-      "totalPaid": 351.52
+      "totalPaid": 22756.68
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-08",
-      "totalPaid": 154.72
+      "totalPaid": 23021.28
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-09",
-      "totalPaid": 492.53
+      "totalPaid": 24226.15
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-10",
-      "totalPaid": 630.95
+      "totalPaid": 30080.12
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-11",
-      "totalPaid": 243.6
+      "totalPaid": 28822.52
     },
     {
       "storeId": "S03",
       "yearMonth": "2024-12",
-      "totalPaid": 289.72
+      "totalPaid": 35736
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-01",
-      "totalPaid": 268.92
+      "totalPaid": 11062.12
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-02",
-      "totalPaid": 1036.04
+      "totalPaid": 12069.86
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-03",
-      "totalPaid": 725.82
+      "totalPaid": 12935.5
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-04",
-      "totalPaid": 918.95
+      "totalPaid": 14504.35
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-05",
-      "totalPaid": 673.14
+      "totalPaid": 14047.18
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-06",
-      "totalPaid": 851.66
+      "totalPaid": 11915.09
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-07",
-      "totalPaid": 134.25
+      "totalPaid": 12706.06
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-08",
-      "totalPaid": 268.6
+      "totalPaid": 13984.79
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-09",
-      "totalPaid": 1120.6
+      "totalPaid": 15230.3
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-10",
-      "totalPaid": 2089.18
+      "totalPaid": 16148.3
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-11",
-      "totalPaid": 245
+      "totalPaid": 17169.42
     },
     {
       "storeId": "S04",
       "yearMonth": "2024-12",
-      "totalPaid": 1169.6
+      "totalPaid": 20428.21
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-01",
-      "totalPaid": 367.94
+      "totalPaid": 26769.78
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-02",
-      "totalPaid": 1555.91
+      "totalPaid": 24113.32
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-03",
-      "totalPaid": 1236.57
+      "totalPaid": 29255.82
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-04",
-      "totalPaid": 1576.57
+      "totalPaid": 36117.56
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-05",
-      "totalPaid": 261.94
+      "totalPaid": 31856.87
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-06",
-      "totalPaid": 772.19
+      "totalPaid": 30536.7
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-07",
-      "totalPaid": 688.75
+      "totalPaid": 29565.35
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-08",
-      "totalPaid": 1367.73
+      "totalPaid": 28937.71
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-09",
-      "totalPaid": 1141.81
+      "totalPaid": 32967.83
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-10",
-      "totalPaid": 953.3
+      "totalPaid": 39411.07
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-11",
-      "totalPaid": 295.8
+      "totalPaid": 37079.39
     },
     {
       "storeId": "S05",
       "yearMonth": "2024-12",
-      "totalPaid": 1061.62
+      "totalPaid": 45792.23
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-01",
-      "totalPaid": 85
+      "totalPaid": 23155.76
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-02",
-      "totalPaid": 162.8
+      "totalPaid": 21096.64
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-03",
-      "totalPaid": 413.08
+      "totalPaid": 25933.87
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-04",
-      "totalPaid": 430.52
+      "totalPaid": 30686.16
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-05",
-      "totalPaid": 547.4
+      "totalPaid": 27604.1
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-06",
-      "totalPaid": 205.8
+      "totalPaid": 25209.35
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-07",
-      "totalPaid": 91.8
+      "totalPaid": 23032.51
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-08",
-      "totalPaid": 957.38
+      "totalPaid": 25583.66
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-09",
-      "totalPaid": 873.47
+      "totalPaid": 27729.43
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-10",
-      "totalPaid": 435.6
+      "totalPaid": 32029.76
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-11",
-      "totalPaid": 315.52
+      "totalPaid": 33273.62
     },
     {
       "storeId": "S06",
       "yearMonth": "2024-12",
-      "totalPaid": 1204.17
+      "totalPaid": 38839.17
     }
   ],
   "validationResults": [],

@@ -18,7 +18,8 @@ export function generateCustomers(rng: SeededRandom, config: GeneratorConfig) {
             : rng.chance(0.42);
     const favoriteBrand = profile === "fidele_marque" ? rng.choice(BRANDS) : null;
     const basePoints = hasLoyaltyCard ? rng.int(0, 220) : 0;
-    const loyaltyPoints = profile === "chasseur_de_promos" ? basePoints + 120 : basePoints;
+    const loyaltyPoints =
+      hasLoyaltyCard && profile === "chasseur_de_promos" ? basePoints + 120 : basePoints;
 
     customers.push({
       id: `C${String(index).padStart(4, "0")}`,

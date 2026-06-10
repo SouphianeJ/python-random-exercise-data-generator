@@ -1,14 +1,14 @@
 import type {
+  AppliedStorePerformance,
   Customer,
   Employee,
-  GeneratedDataset,
   GeneratorConfig,
   Product,
   Sale,
   SaleLine,
   Store,
   StoreMonthCost,
-  ResolvedExamScenario,
+  StoreMonthlyVolumePlan,
 } from "./types";
 import { configWarnings, roundCurrency } from "./utils";
 import { validateDataset } from "./validate";
@@ -22,7 +22,8 @@ export function summarizeDataset(
   sales: Sale[],
   saleLines: SaleLine[],
   storeMonthCosts: StoreMonthCost[],
-  examScenarioApplied?: ResolvedExamScenario,
+  storeMonthlyVolumePlan: StoreMonthlyVolumePlan[],
+  storePerformanceApplied: AppliedStorePerformance[],
 ) {
   const totals = new Map<string, number>();
   for (const line of saleLines) {
@@ -50,22 +51,7 @@ export function summarizeDataset(
     sales,
     saleLines,
     storeMonthCosts,
-    summary: {
-      counts: {
-        stores: stores.length,
-        employees: employees.length,
-        products: products.length,
-        customers: customers.length,
-        sales: sales.length,
-        saleLines: saleLines.length,
-        storeMonthCosts: storeMonthCosts.length,
-      },
-      monthlyRevenueTotals,
-      validationResults: [],
-      anomalyCount: 0,
-      warnings: [],
-    },
-  } as GeneratedDataset);
+  });
 
   return {
     counts: {
@@ -80,7 +66,7 @@ export function summarizeDataset(
     monthlyRevenueTotals,
     validationResults,
     anomalyCount: validationResults.filter((issue) => issue.severity === "error").length,
-    warnings: configWarnings(config, examScenarioApplied),
-    examScenarioApplied,
+    warnings: configWarnings(config, storePerformanceApplied),
+    storePerformanceApplied,
   };
 }

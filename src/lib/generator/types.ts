@@ -1,14 +1,11 @@
-export type ExportMode = "canonical-json" | "legacy-compatible-clean";
-export type ExamScenarioPresetId =
-  | "underperforming_sales_execution"
-  | "understaffed_store"
-  | "promo_dependency"
-  | "premium_low_traffic"
-  | "discount_volume_winner";
-export type ExamScenarioStrength = "light" | "medium" | "strong";
-
 export type StoreType = "Premium" | "Standard" | "Discount";
 export type Zone = "Centre-ville" | "Peripherie";
+export type StorePerformanceStatus =
+  | "superperformant"
+  | "viable"
+  | "neutre"
+  | "sous_performant_turnover"
+  | "critique_turnover";
 export type EmployeeProfile =
   | "Requin"
   | "Experimente"
@@ -29,38 +26,56 @@ export interface GeneratorConfig {
   storeCount: number;
   productCount: number;
   customerCount: number;
-  targetSaleCount?: number;
-  targetSaleLineCount?: number;
-  exportMode: ExportMode;
   includeAccessories: boolean;
   includeInterns: boolean;
-  examScenario?: "none" | ExamScenarioPresetId;
-  examScenarioStoreId?: string;
-  examScenarioStrength?: ExamScenarioStrength;
+  storePerformancePlan?: StorePerformanceInput[];
 }
 
-export interface ScenarioDriverModifiers {
-  trafficMultiplier: number;
-  conversionMultiplier: number;
-  basketLineMultiplier: number;
-  accessoryAttachMultiplier: number;
+export interface StorePerformanceInput {
+  storeId?: string;
+  storeType?: StoreType;
+  performanceStatus: StorePerformanceStatus;
+}
+
+export interface StorePerformanceModifiers {
+  trafficVisibilityMultiplier: number;
+  conversionExecutionMultiplier: number;
+  basketExecutionMultiplier: number;
+  accessoryExecutionMultiplier: number;
+  sellerEffectMultiplier: number;
   specialOfferMultiplier: number;
   monthDiscountMultiplier: number;
   premiumMixMultiplier: number;
-  sellerEffectMultiplier: number;
   frontOfficeEfficiencyShift: number;
-  openingHoursDelta: -1 | 0 | 1;
+  staffStabilityMultiplier: number;
+  salaryPressureMultiplier: number;
   fixedCostPressureMultiplier: number;
   marketingFloorMultiplier: number;
 }
 
-export interface ResolvedExamScenario {
-  presetId: ExamScenarioPresetId;
+export interface AppliedStorePerformance {
+  inputIndex: number;
+  performanceStatus: StorePerformanceStatus;
   label: string;
-  strength: ExamScenarioStrength;
   targetStoreId: string;
   expectedSignals: string[];
-  activeModifiers: ScenarioDriverModifiers;
+  activeModifiers: StorePerformanceModifiers;
+}
+
+export interface ResolvedStorePerformancePlan {
+  applied: AppliedStorePerformance[];
+}
+
+export interface StoreMonthlyVolumePlan {
+  storeId: string;
+  yearMonth: string;
+  month: number;
+  expectedDailyVisitors: number;
+  expectedDailyTickets: number;
+  expectedMonthlyTickets: number;
+  expectedAvgLinesPerTicket: number;
+  expectedAvgTicketTtc: number;
+  expectedMonthlyRevenue: number;
 }
 
 export interface Store {
@@ -103,6 +118,7 @@ export interface Employee {
   salaryMonthly: number;
   salaryHourly: number;
   hireDate: string;
+  endDate: string | null;
   tenureMonths: number;
   workRatioBackoffice: number;
   workRatioFrontoffice: number;
@@ -231,14 +247,7 @@ export interface GeneratedDatasetSummary {
   validationResults: ValidationIssue[];
   anomalyCount: number;
   warnings: string[];
-  examScenarioApplied?: {
-    presetId: ExamScenarioPresetId;
-    label: string;
-    strength: ExamScenarioStrength;
-    targetStoreId: string;
-    expectedSignals: string[];
-    activeModifiers: ScenarioDriverModifiers;
-  };
+  storePerformanceApplied: AppliedStorePerformance[];
 }
 
 export interface GeneratedDataset {
@@ -250,6 +259,7 @@ export interface GeneratedDataset {
   sales: Sale[];
   saleLines: SaleLine[];
   storeMonthCosts: StoreMonthCost[];
+  storeMonthlyVolumePlan: StoreMonthlyVolumePlan[];
   summary: GeneratedDatasetSummary;
-  examScenarioApplied?: ResolvedExamScenario;
+  storePerformanceApplied: AppliedStorePerformance[];
 }

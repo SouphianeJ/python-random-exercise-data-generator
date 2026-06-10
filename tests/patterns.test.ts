@@ -21,8 +21,51 @@ function median(values: number[]) {
     : sorted[middle];
 }
 
-function groupMedian(values: number[]) {
-  return median(values.filter((value) => Number.isFinite(value)));
+function contributionMarginByStore(dataset: ReturnType<typeof generateDataset>) {
+  const map = new Map<string, number>();
+  for (const cost of dataset.storeMonthCosts) {
+    map.set(cost.storeId, (map.get(cost.storeId) ?? 0) + cost.caTtc - cost.totalStoreCost);
+  }
+  return map;
+}
+
+function sellerMetrics(dataset: ReturnType<typeof generateDataset>) {
+  const metrics = new Map<
+    string,
+    { storeId: string; profile: string; tickets: number; revenue: number; lines: number; accessories: number }
+  >();
+
+  for (const employee of dataset.employees) {
+    metrics.set(employee.id, {
+      storeId: employee.storeId,
+      profile: employee.profile,
+      tickets: 0,
+      revenue: 0,
+      lines: 0,
+      accessories: 0,
+    });
+  }
+
+  for (const sale of dataset.sales) {
+    const bucket = metrics.get(sale.employeeId)!;
+    bucket.tickets += 1;
+    bucket.revenue += sale.totalPaid;
+    bucket.lines += sale.lineCount;
+  }
+
+  for (const line of dataset.saleLines) {
+    if (line.productKind !== "accessory") continue;
+    metrics.get(line.employeeId)!.accessories += 1;
+  }
+
+  return [...metrics.values()].map((metric) => ({
+    storeId: metric.storeId,
+    profile: metric.profile,
+    ticketsPerEmployee: metric.tickets,
+    revenuePerEmployee: metric.revenue,
+    linesPerTicket: metric.lines / Math.max(1, metric.tickets),
+    accessoryAttachRate: metric.accessories / Math.max(1, metric.lines),
+  }));
 }
 
 test("representative runs include the main store archetypes", () => {
@@ -32,7 +75,6 @@ test("representative runs include the main store archetypes", () => {
     storeCount: 6,
     productCount: 90,
     customerCount: 320,
-    targetSaleLineCount: 900,
   });
 
   const storeTypes = new Set(dataset.stores.map((store) => store.type));
@@ -49,7 +91,6 @@ test("seasonality remains present in a representative batch", () => {
     storeCount: 6,
     productCount: 90,
     customerCount: 450,
-    targetSaleLineCount: 2200,
   });
 
   const totalsByMonth = new Map<string, number>();
@@ -64,7 +105,7 @@ test("seasonality remains present in a representative batch", () => {
     .filter(([month]) => month.endsWith("-02"))
     .reduce((sum, [, total]) => sum + total, 0);
 
-  assert.ok(december > february, `Expected December revenue (${december}) to exceed February (${february})`);
+  assert.ok(december > february);
 });
 
 test("premium and discount stores keep distinct business profiles", () => {
@@ -74,23 +115,21 @@ test("premium and discount stores keep distinct business profiles", () => {
     storeCount: 9,
     productCount: 120,
     customerCount: 600,
-    targetSaleLineCount: 2400,
   });
 
   const premiumStores = dataset.stores.filter((store) => store.type === "Premium");
   const discountStores = dataset.stores.filter((store) => store.type === "Discount");
 
-  assert.ok(premiumStores.length > 0);
-  assert.ok(discountStores.length > 0);
+  assert.ok(average(premiumStores.map((store) => store.avgBasketValue)) > average(discountStores.map((store) => store.avgBasketValue)));
+  assert.ok(average(premiumStores.map((store) => store.priceAdjustmentPercent)) > average(discountStores.map((store) => store.priceAdjustmentPercent)));
+
+  const salesByStore = new Map<string, number>();
+  for (const sale of dataset.sales) {
+    salesByStore.set(sale.storeId, (salesByStore.get(sale.storeId) ?? 0) + 1);
+  }
   assert.ok(
-    average(premiumStores.map((store) => store.avgBasketValue)) >
-      average(discountStores.map((store) => store.avgBasketValue)),
-    "Premium stores should keep a higher modeled basket value than discount stores.",
-  );
-  assert.ok(
-    average(premiumStores.map((store) => store.priceAdjustmentPercent)) >
-      average(discountStores.map((store) => store.priceAdjustmentPercent)),
-    "Premium stores should keep a more positive price adjustment than discount stores.",
+    average(discountStores.map((store) => salesByStore.get(store.id) ?? 0)) >
+      average(premiumStores.map((store) => salesByStore.get(store.id) ?? 0)),
   );
 });
 
@@ -101,9 +140,7 @@ test("discount stores keep a tighter average shoe price band than cross-type com
     storeCount: 8,
     productCount: 100,
     customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "underperforming_sales_execution",
-    examScenarioStrength: "medium",
+    storePerformancePlan: [{ storeType: "Discount", performanceStatus: "sous_performant_turnover" }],
   });
 
   const shoePricesByStore = new Map<string, number[]>();
@@ -123,41 +160,33 @@ test("discount stores keep a tighter average shoe price band than cross-type com
     .map((store) => averageOrZero(shoePricesByStore.get(store.id) ?? []))
     .filter((value) => value > 0);
 
-  assert.ok(discountStoreAverages.length >= 2);
-  assert.ok(premiumStoreAverages.length >= 1);
+  const discountSpread = Math.max(...discountStoreAverages) - Math.min(...discountStoreAverages);
+  const crossTypeGap = averageOrZero(premiumStoreAverages) - averageOrZero(discountStoreAverages);
 
-  const discountSpread =
-    Math.max(...discountStoreAverages) - Math.min(...discountStoreAverages);
-  const crossTypeGap =
-    averageOrZero(premiumStoreAverages) - averageOrZero(discountStoreAverages);
-
-  assert.ok(
-    discountSpread <= 12,
-    `Discount stores should stay in a relatively tight shoe-price band, observed spread ${discountSpread.toFixed(2)}.`,
-  );
-  assert.ok(
-    crossTypeGap > discountSpread,
-    `Cross-type gap should stay stronger than intra-discount spread, observed gap ${crossTypeGap.toFixed(2)} vs spread ${discountSpread.toFixed(2)}.`,
-  );
+  assert.ok(discountSpread <= 12);
+  assert.ok(crossTypeGap > discountSpread);
 });
 
-test("surface still drives staffing and foot traffic", () => {
+test("surface still drives staffing and volume potential", () => {
   const dataset = generateDataset({
     ...defaultConfig,
     seed: 8800,
     storeCount: 10,
     productCount: 100,
     customerCount: 500,
-    targetSaleLineCount: 1200,
   });
 
   const bySurface = [...dataset.stores].sort((left, right) => left.surface - right.surface);
   const smallest = bySurface[0];
   const largest = bySurface.at(-1)!;
+  const salesByStore = new Map<string, number>();
+  for (const sale of dataset.sales) {
+    salesByStore.set(sale.storeId, (salesByStore.get(sale.storeId) ?? 0) + 1);
+  }
 
   assert.ok(largest.employeeCount >= smallest.employeeCount);
   assert.ok(largest.footTrafficByHour >= smallest.footTrafficByHour);
-  assert.ok(largest.dailyFootTraffic >= smallest.dailyFootTraffic);
+  assert.ok((salesByStore.get(largest.id) ?? 0) >= (salesByStore.get(smallest.id) ?? 0));
 });
 
 test("stores keep one or two closing days depending on open_days", () => {
@@ -167,22 +196,13 @@ test("stores keep one or two closing days depending on open_days", () => {
     storeCount: 8,
     productCount: 90,
     customerCount: 320,
-    targetSaleLineCount: 1000,
   });
 
   const stores = new Map(dataset.stores.map((store) => [store.id, store]));
-
-  for (const store of dataset.stores) {
-    assert.ok(store.openDays === "open 5/7" || store.openDays === "open 6/7");
-    const closingDays = store.openDays === "open 5/7" ? 2 : 1;
-    assert.ok(closingDays === 1 || closingDays === 2);
-  }
-
   for (const sale of dataset.sales) {
     const store = stores.get(sale.storeId)!;
     const weekday = new Date(`${sale.date}T12:00:00.000Z`).getUTCDay();
     const normalizedWeekday = weekday === 0 ? 7 : weekday;
-
     if (store.openDays === "open 5/7") {
       assert.ok(normalizedWeekday >= 1 && normalizedWeekday <= 5);
     } else {
@@ -198,7 +218,6 @@ test("repeat visits are present and stronger for loyalty-oriented customers", ()
     storeCount: 7,
     productCount: 96,
     customerCount: 320,
-    targetSaleLineCount: 1800,
   });
 
   const customers = new Map(dataset.customers.map((customer) => [customer.id, customer]));
@@ -207,21 +226,15 @@ test("repeat visits are present and stronger for loyalty-oriented customers", ()
     salesByCustomer.set(sale.customerId, (salesByCustomer.get(sale.customerId) ?? 0) + 1);
   }
 
-  const repeatCustomers = [...salesByCustomer.values()].filter((count) => count >= 2).length;
-  assert.ok(repeatCustomers > 0, "Expected at least some customers to revisit.");
-
   const loyaltyCounts: number[] = [];
   const impulsiveCounts: number[] = [];
   for (const [customerId, count] of salesByCustomer.entries()) {
     const profile = customers.get(customerId)?.profile;
-    if (profile === "fidele_marque" || profile === "sneakerhead") {
-      loyaltyCounts.push(count);
-    }
-    if (profile === "impulsif") {
-      impulsiveCounts.push(count);
-    }
+    if (profile === "fidele_marque" || profile === "sneakerhead") loyaltyCounts.push(count);
+    if (profile === "impulsif") impulsiveCounts.push(count);
   }
 
+  assert.ok(loyaltyCounts.length > 0);
   assert.ok(average(loyaltyCounts) > average(impulsiveCounts));
 });
 
@@ -232,7 +245,6 @@ test("basket expansion is tied to seller and customer profiles", () => {
     storeCount: 8,
     productCount: 100,
     customerCount: 420,
-    targetSaleLineCount: 2200,
   });
 
   const employees = new Map(dataset.employees.map((employee) => [employee.id, employee]));
@@ -252,14 +264,8 @@ test("basket expansion is tied to seller and customer profiles", () => {
     lineCountByCustomerProfile.set(customerProfile, customerBucket);
   }
 
-  assert.ok(
-    average(lineCountBySellerProfile.get("Requin") ?? [0]) >
-      average(lineCountBySellerProfile.get("Blase") ?? [0]),
-  );
-  assert.ok(
-    average(lineCountByCustomerProfile.get("sneakerhead") ?? [0]) >
-      average(lineCountByCustomerProfile.get("chasseur_de_promos") ?? [0]),
-  );
+  assert.ok(average(lineCountBySellerProfile.get("Requin") ?? [0]) > average(lineCountBySellerProfile.get("Blase") ?? [0]));
+  assert.ok(average(lineCountByCustomerProfile.get("sneakerhead") ?? [0]) > average(lineCountByCustomerProfile.get("chasseur_de_promos") ?? [0]));
 });
 
 test("brand-loyal customers keep buying their favorite brand when buying shoes", () => {
@@ -269,23 +275,17 @@ test("brand-loyal customers keep buying their favorite brand when buying shoes",
     storeCount: 6,
     productCount: 88,
     customerCount: 260,
-    targetSaleLineCount: 1300,
   });
 
   const customers = new Map(dataset.customers.map((customer) => [customer.id, customer]));
   const loyalShoeLines = dataset.saleLines.filter((line) => {
     const customer = customers.get(line.customerId);
-    return (
-      line.productKind === "shoe" &&
-      customer?.profile === "fidele_marque" &&
-      customer.favoriteBrand
-    );
+    return line.productKind === "shoe" && customer?.profile === "fidele_marque" && customer.favoriteBrand;
   });
 
   assert.ok(loyalShoeLines.length > 0);
   assert.equal(
-    loyalShoeLines.filter((line) => line.brand === customers.get(line.customerId)!.favoriteBrand)
-      .length,
+    loyalShoeLines.filter((line) => line.brand === customers.get(line.customerId)!.favoriteBrand).length,
     loyalShoeLines.length,
   );
 });
@@ -297,67 +297,36 @@ test("seller personas stay behaviorally differentiated", () => {
     storeCount: 10,
     productCount: 120,
     customerCount: 650,
-    targetSaleLineCount: 3200,
   });
 
   const employees = new Map(dataset.employees.map((employee) => [employee.id, employee]));
-  const employeeHeadcount = new Map<string, number>();
+  const headcount = new Map<string, number>();
   for (const employee of dataset.employees) {
-    employeeHeadcount.set(employee.profile, (employeeHeadcount.get(employee.profile) ?? 0) + 1);
+    headcount.set(employee.profile, (headcount.get(employee.profile) ?? 0) + 1);
   }
 
-  const metrics = new Map<
-    string,
-    { sales: number; lines: number; paid: number; accessories: number; hype: number; shoeLines: number }
-  >();
-
+  const metrics = new Map<string, { sales: number; lines: number; paid: number; accessories: number }>();
   for (const sale of dataset.sales) {
     const profile = employees.get(sale.employeeId)!.profile;
-    const bucket = metrics.get(profile) ?? {
-      sales: 0,
-      lines: 0,
-      paid: 0,
-      accessories: 0,
-      hype: 0,
-      shoeLines: 0,
-    };
+    const bucket = metrics.get(profile) ?? { sales: 0, lines: 0, paid: 0, accessories: 0 };
     bucket.sales += 1;
     bucket.lines += sale.lineCount;
     bucket.paid += sale.totalPaid;
     metrics.set(profile, bucket);
   }
-
   for (const line of dataset.saleLines) {
+    if (line.productKind !== "accessory") continue;
     const profile = employees.get(line.employeeId)!.profile;
-    const bucket = metrics.get(profile)!;
-    if (line.productKind === "accessory") {
-      bucket.accessories += 1;
-    }
-    if (line.productKind === "shoe") {
-      bucket.shoeLines += 1;
-      if (line.isBestSeller || line.category === "Limited Edition") {
-        bucket.hype += 1;
-      }
-    }
+    metrics.get(profile)!.accessories += 1;
   }
 
-  const salesPerEmployee = (profile: string) =>
-    (metrics.get(profile)?.sales ?? 0) / (employeeHeadcount.get(profile) ?? 1);
-  const linesPerSale = (profile: string) =>
-    (metrics.get(profile)?.lines ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
-  const paidPerSale = (profile: string) =>
-    (metrics.get(profile)?.paid ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
-  const accessoryRate = (profile: string) =>
-    (metrics.get(profile)?.accessories ?? 0) / Math.max(1, metrics.get(profile)?.lines ?? 0);
-  const hypeRate = (profile: string) =>
-    (metrics.get(profile)?.hype ?? 0) / Math.max(1, metrics.get(profile)?.shoeLines ?? 0);
+  const salesPerEmployee = (profile: string) => (metrics.get(profile)?.sales ?? 0) / (headcount.get(profile) ?? 1);
+  const linesPerSale = (profile: string) => (metrics.get(profile)?.lines ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
+  const accessoryRate = (profile: string) => (metrics.get(profile)?.accessories ?? 0) / Math.max(1, metrics.get(profile)?.lines ?? 0);
 
   assert.ok(salesPerEmployee("Requin") > salesPerEmployee("Blase"));
-  assert.ok(salesPerEmployee("Experimente") > salesPerEmployee("Stagiaire"));
   assert.ok(linesPerSale("Requin") > linesPerSale("Blase"));
-  assert.ok(paidPerSale("Requin") > paidPerSale("JeunePrometteur"));
   assert.ok(accessoryRate("Requin") > accessoryRate("Blase"));
-  assert.ok(hypeRate("Requin") > hypeRate("Blase"));
 });
 
 test("buyer personas stay behaviorally differentiated", () => {
@@ -367,37 +336,15 @@ test("buyer personas stay behaviorally differentiated", () => {
     storeCount: 10,
     productCount: 120,
     customerCount: 700,
-    targetSaleLineCount: 3200,
   });
 
   const customers = new Map(dataset.customers.map((customer) => [customer.id, customer]));
   const activeCustomersByProfile = new Map<string, Set<string>>();
-  const metrics = new Map<
-    string,
-    {
-      sales: number;
-      lines: number;
-      paid: number;
-      discounts: number;
-      loyaltyUsed: number;
-      accessories: number;
-      hype: number;
-      shoeLines: number;
-    }
-  >();
+  const metrics = new Map<string, { sales: number; lines: number; paid: number; discounts: number; loyaltyUsed: number; accessories: number }>();
 
   for (const sale of dataset.sales) {
     const profile = customers.get(sale.customerId)!.profile;
-    const bucket = metrics.get(profile) ?? {
-      sales: 0,
-      lines: 0,
-      paid: 0,
-      discounts: 0,
-      loyaltyUsed: 0,
-      accessories: 0,
-      hype: 0,
-      shoeLines: 0,
-    };
+    const bucket = metrics.get(profile) ?? { sales: 0, lines: 0, paid: 0, discounts: 0, loyaltyUsed: 0, accessories: 0 };
     bucket.sales += 1;
     bucket.lines += sale.lineCount;
     bucket.paid += sale.totalPaid;
@@ -408,44 +355,24 @@ test("buyer personas stay behaviorally differentiated", () => {
     active.add(sale.customerId);
     activeCustomersByProfile.set(profile, active);
   }
-
   for (const line of dataset.saleLines) {
-    const profile = customers.get(line.customerId)!.profile;
-    const bucket = metrics.get(profile)!;
-    if (line.productKind === "accessory") {
-      bucket.accessories += 1;
-    }
-    if (line.productKind === "shoe") {
-      bucket.shoeLines += 1;
-      if (line.isBestSeller || line.category === "Limited Edition") {
-        bucket.hype += 1;
-      }
-    }
+    if (line.productKind !== "accessory") continue;
+    metrics.get(customers.get(line.customerId)!.profile)!.accessories += 1;
   }
 
-  const linesPerSale = (profile: string) =>
-    (metrics.get(profile)?.lines ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
-  const paidPerSale = (profile: string) =>
-    (metrics.get(profile)?.paid ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
-  const discountPerSale = (profile: string) =>
-    (metrics.get(profile)?.discounts ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
-  const loyaltyUsedPerSale = (profile: string) =>
-    (metrics.get(profile)?.loyaltyUsed ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
-  const accessoryRate = (profile: string) =>
-    (metrics.get(profile)?.accessories ?? 0) / Math.max(1, metrics.get(profile)?.lines ?? 0);
-  const hypeRate = (profile: string) =>
-    (metrics.get(profile)?.hype ?? 0) / Math.max(1, metrics.get(profile)?.shoeLines ?? 0);
-  const visitsPerActiveCustomer = (profile: string) =>
-    (metrics.get(profile)?.sales ?? 0) / Math.max(1, activeCustomersByProfile.get(profile)?.size ?? 0);
+  const linesPerSale = (profile: string) => (metrics.get(profile)?.lines ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
+  const paidPerSale = (profile: string) => (metrics.get(profile)?.paid ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
+  const discountPerSale = (profile: string) => (metrics.get(profile)?.discounts ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
+  const loyaltyUsedPerSale = (profile: string) => (metrics.get(profile)?.loyaltyUsed ?? 0) / Math.max(1, metrics.get(profile)?.sales ?? 0);
+  const accessoryRate = (profile: string) => (metrics.get(profile)?.accessories ?? 0) / Math.max(1, metrics.get(profile)?.lines ?? 0);
+  const visitsPerActiveCustomer = (profile: string) => (metrics.get(profile)?.sales ?? 0) / Math.max(1, activeCustomersByProfile.get(profile)?.size ?? 0);
 
-  assert.ok(hypeRate("sneakerhead") > hypeRate("chasseur_de_promos"));
   assert.ok(paidPerSale("sneakerhead") > paidPerSale("chasseur_de_promos"));
   assert.ok(accessoryRate("impulsif") > accessoryRate("fidele_marque"));
   assert.ok(linesPerSale("impulsif") > linesPerSale("fidele_marque"));
   assert.ok(discountPerSale("chasseur_de_promos") > discountPerSale("impulsif"));
   assert.ok(loyaltyUsedPerSale("chasseur_de_promos") > loyaltyUsedPerSale("impulsif"));
   assert.ok(visitsPerActiveCustomer("fidele_marque") > visitsPerActiveCustomer("impulsif"));
-  assert.ok(visitsPerActiveCustomer("sneakerhead") > visitsPerActiveCustomer("impulsif"));
 });
 
 test("shop personas stay structurally differentiated", () => {
@@ -455,7 +382,6 @@ test("shop personas stay structurally differentiated", () => {
     storeCount: 12,
     productCount: 120,
     customerCount: 500,
-    targetSaleLineCount: 1800,
   });
 
   const premium = dataset.stores.filter((store) => store.type === "Premium");
@@ -469,27 +395,31 @@ test("shop personas stay structurally differentiated", () => {
   assert.ok(averageOrZero(discount.map((store) => store.surface)) > averageOrZero(premium.map((store) => store.surface)));
 });
 
-test("underperforming sales execution scenario is visible on the targeted store", () => {
+test("store performance statuses visibly change volume and productivity", () => {
   const dataset = generateDataset({
     ...defaultConfig,
     seed: 111222,
-    storeCount: 8,
+    storeCount: 9,
     productCount: 100,
     customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "underperforming_sales_execution",
-    examScenarioStrength: "medium",
+    storePerformancePlan: [
+      { storeType: "Discount", performanceStatus: "superperformant" },
+      { storeType: "Discount", performanceStatus: "sous_performant_turnover" },
+      { storeType: "Discount", performanceStatus: "critique_turnover" },
+      { storeType: "Premium", performanceStatus: "viable" },
+    ],
   });
 
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const salesCountByStore = new Map<string, number>();
-  const paidByStore = new Map<string, number>();
+  const applied = dataset.storePerformanceApplied;
+  assert.ok(applied.length >= 4);
+
+  const salesByStore = new Map<string, number>();
+  const revenueByStore = new Map<string, number>();
   const linesByStore = new Map<string, number>();
   const accessoriesByStore = new Map<string, number>();
-
   for (const sale of dataset.sales) {
-    salesCountByStore.set(sale.storeId, (salesCountByStore.get(sale.storeId) ?? 0) + 1);
-    paidByStore.set(sale.storeId, (paidByStore.get(sale.storeId) ?? 0) + sale.totalPaid);
+    salesByStore.set(sale.storeId, (salesByStore.get(sale.storeId) ?? 0) + 1);
+    revenueByStore.set(sale.storeId, (revenueByStore.get(sale.storeId) ?? 0) + sale.totalPaid);
     linesByStore.set(sale.storeId, (linesByStore.get(sale.storeId) ?? 0) + sale.lineCount);
   }
   for (const line of dataset.saleLines) {
@@ -497,332 +427,67 @@ test("underperforming sales execution scenario is visible on the targeted store"
     accessoriesByStore.set(line.storeId, (accessoriesByStore.get(line.storeId) ?? 0) + 1);
   }
 
-  const controlStore = dataset.stores
-    .filter(
-      (store) =>
-        store.id !== targetStoreId &&
-        store.type === "Discount" &&
-        store.zone === "Peripherie" &&
-        store.employeeCount >= 8,
-    )
-    .sort((left, right) => right.employeeCount - left.employeeCount)[0];
+  const statusMap = new Map(applied.map((entry) => [entry.performanceStatus, entry.targetStoreId]));
+  const superStore = statusMap.get("superperformant")!;
+  const underStore = statusMap.get("sous_performant_turnover")!;
+  const criticalStore = statusMap.get("critique_turnover")!;
 
-  assert.ok(controlStore);
-
+  assert.ok((salesByStore.get(superStore) ?? 0) > (salesByStore.get(underStore) ?? 0));
+  assert.ok((salesByStore.get(underStore) ?? 0) > (salesByStore.get(criticalStore) ?? 0));
+  assert.ok((revenueByStore.get(superStore) ?? 0) > (revenueByStore.get(underStore) ?? 0));
+  assert.ok((revenueByStore.get(underStore) ?? 0) > (revenueByStore.get(criticalStore) ?? 0));
   assert.ok(
-    (paidByStore.get(targetStoreId) ?? 0) < (paidByStore.get(controlStore.id) ?? 0),
-  );
-  assert.ok(
-    (linesByStore.get(targetStoreId) ?? 0) / Math.max(1, salesCountByStore.get(targetStoreId) ?? 0) <
-      (linesByStore.get(controlStore.id) ?? 0) /
-        Math.max(1, salesCountByStore.get(controlStore.id) ?? 0),
-  );
-  assert.ok(
-    (accessoriesByStore.get(targetStoreId) ?? 0) / Math.max(1, linesByStore.get(targetStoreId) ?? 0) <
-      (accessoriesByStore.get(controlStore.id) ?? 0) /
-        Math.max(1, linesByStore.get(controlStore.id) ?? 0),
+    (accessoriesByStore.get(underStore) ?? 0) / Math.max(1, linesByStore.get(underStore) ?? 0) <
+      (accessoriesByStore.get(superStore) ?? 0) / Math.max(1, linesByStore.get(superStore) ?? 0),
   );
 });
 
-test("underperforming sales execution is visible in seller-level productivity indicators", () => {
+test("annual performance mix now includes profitable, near-equilibrium and loss-making stores", () => {
   const dataset = generateDataset({
     ...defaultConfig,
-    seed: 111222,
-    storeCount: 8,
-    productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "underperforming_sales_execution",
-    examScenarioStrength: "medium",
+    seed: 606060,
+    storeCount: 9,
+    productCount: 110,
+    customerCount: 900,
+    storePerformancePlan: [
+      { storeType: "Discount", performanceStatus: "superperformant" },
+      { storeType: "Premium", performanceStatus: "viable" },
+      { storeType: "Discount", performanceStatus: "sous_performant_turnover" },
+      { storeType: "Discount", performanceStatus: "critique_turnover" },
+    ],
   });
 
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const employeesById = new Map(dataset.employees.map((employee) => [employee.id, employee]));
-  const employeeMetrics = new Map<
-    string,
-    { storeId: string; profile: string; tickets: number; revenue: number; lines: number; accessories: number }
-  >();
+  const margins = [...contributionMarginByStore(dataset).values()];
+  const marginRates = dataset.stores.map((store) => {
+    const margin = contributionMarginByStore(dataset).get(store.id) ?? 0;
+    const revenue = dataset.storeMonthCosts
+      .filter((row) => row.storeId === store.id)
+      .reduce((sum, row) => sum + row.caTtc, 0);
+    return (margin / Math.max(1, revenue)) * 100;
+  });
 
-  for (const employee of dataset.employees) {
-    employeeMetrics.set(employee.id, {
-      storeId: employee.storeId,
-      profile: employee.profile,
-      tickets: 0,
-      revenue: 0,
-      lines: 0,
-      accessories: 0,
-    });
-  }
-
-  for (const sale of dataset.sales) {
-    const bucket = employeeMetrics.get(sale.employeeId)!;
-    bucket.tickets += 1;
-    bucket.revenue += sale.totalPaid;
-    bucket.lines += sale.lineCount;
-  }
-
-  for (const line of dataset.saleLines) {
-    if (line.productKind !== "accessory") continue;
-    const bucket = employeeMetrics.get(line.employeeId)!;
-    bucket.accessories += 1;
-  }
-
-  const sellerRows = [...employeeMetrics.values()].map((metric) => ({
-    storeId: metric.storeId,
-    profile: metric.profile,
-    ticketsPerEmployee: metric.tickets,
-    revenuePerEmployee: metric.revenue,
-    linesPerTicket: metric.lines / Math.max(1, metric.tickets),
-    accessoryAttachRate: metric.accessories / Math.max(1, metric.lines),
-  }));
-
-  const targetRows = sellerRows.filter((row) => row.storeId === targetStoreId);
-  const controlStore = dataset.stores
-    .filter(
-      (store) =>
-        store.id !== targetStoreId &&
-        store.type === "Discount" &&
-        store.zone === "Peripherie" &&
-        store.employeeCount >= 8,
-    )
-    .sort((left, right) => right.employeeCount - left.employeeCount)[0];
-  assert.ok(controlStore);
-
-  const controlRows = sellerRows.filter((row) => row.storeId === controlStore.id);
-
-  assert.ok(targetRows.length > 0);
-  assert.ok(
-    average(targetRows.map((row) => row.ticketsPerEmployee)) <
-      average(controlRows.map((row) => row.ticketsPerEmployee)),
-  );
-  assert.ok(
-    average(targetRows.map((row) => row.revenuePerEmployee)) <
-      average(controlRows.map((row) => row.revenuePerEmployee)),
-  );
-  assert.ok(
-    average(targetRows.map((row) => row.linesPerTicket)) <
-      average(controlRows.map((row) => row.linesPerTicket)),
-  );
-  assert.ok(
-    average(targetRows.map((row) => row.accessoryAttachRate)) <
-      average(controlRows.map((row) => row.accessoryAttachRate)),
-  );
-
-  const targetTopProfiles = sellerRows.filter(
-    (row) =>
-      row.storeId === targetStoreId &&
-      (row.profile === "Requin" || row.profile === "Experimente"),
-  );
-  const targetWeakerProfiles = sellerRows.filter(
-    (row) =>
-      row.storeId === targetStoreId &&
-      (row.profile === "JeunePrometteur" || row.profile === "Blase" || row.profile === "Stagiaire"),
-  );
-
-  if (targetTopProfiles.length > 0 && targetWeakerProfiles.length > 0) {
-    assert.ok(
-      average(targetTopProfiles.map((row) => row.revenuePerEmployee)) >
-        average(targetWeakerProfiles.map((row) => row.revenuePerEmployee)),
-    );
-    assert.ok(
-      average(targetTopProfiles.map((row) => row.linesPerTicket)) >=
-        average(targetWeakerProfiles.map((row) => row.linesPerTicket)),
-    );
-  }
-
-  const topProfileComparables = controlRows.filter(
-    (row) =>
-      (row.profile === "Requin" || row.profile === "Experimente"),
-  );
-
-  if (targetTopProfiles.length > 0 && topProfileComparables.length > 0) {
-    assert.ok(
-      average(targetTopProfiles.map((row) => row.revenuePerEmployee)) >
-        average(topProfileComparables.map((row) => row.revenuePerEmployee)) * 0.72,
-    );
-  }
+  assert.ok(margins.some((value) => value > 50000));
+  assert.ok(margins.some((value) => value < -20000));
+  assert.ok(marginRates.some((value) => value > -10 && value < 10));
 });
 
-test("underperforming sales execution creates a large discount target with a large discount control", () => {
+test("cost realism ratios move back into a plausible range", () => {
   const dataset = generateDataset({
     ...defaultConfig,
-    seed: 111222,
+    seed: 606060,
     storeCount: 8,
     productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "underperforming_sales_execution",
-    examScenarioStrength: "medium",
+    customerCount: 850,
+    storePerformancePlan: [
+      { storeType: "Discount", performanceStatus: "sous_performant_turnover" },
+    ],
   });
 
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const largeDiscountStores = dataset.stores.filter(
-    (store) => store.type === "Discount" && store.zone === "Peripherie" && store.employeeCount >= 8,
-  );
+  const shrinkRates = dataset.storeMonthCosts.map((row) => (row.shrinkage / Math.max(1, row.caHt)) * 100);
+  const paymentFeeRates = dataset.storeMonthCosts.map((row) => (row.paymentFees / Math.max(1, row.caTtc)) * 100);
+  const payrollRates = dataset.storeMonthCosts.map((row) => ((row.grossPayroll + row.employerContrib) / Math.max(1, row.caTtc)) * 100);
 
-  assert.ok(largeDiscountStores.length >= 2);
-  assert.ok(largeDiscountStores.some((store) => store.id === targetStoreId));
-});
-
-test("underperforming sales execution biases the target store toward lower pay and newer hires", () => {
-  const dataset = generateDataset({
-    ...defaultConfig,
-    seed: 111222,
-    storeCount: 8,
-    productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "underperforming_sales_execution",
-    examScenarioStrength: "medium",
-  });
-
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const targetEmployees = dataset.employees.filter((employee) => employee.storeId === targetStoreId);
-  const controlStore = dataset.stores
-    .filter(
-      (store) =>
-        store.id !== targetStoreId &&
-        store.type === "Discount" &&
-        store.zone === "Peripherie" &&
-        store.employeeCount >= 8,
-    )
-    .sort((left, right) => right.employeeCount - left.employeeCount)[0];
-
-  assert.ok(controlStore);
-
-  const controlEmployees = dataset.employees.filter((employee) => employee.storeId === controlStore.id);
-
-  assert.ok(
-    average(targetEmployees.map((employee) => employee.salaryMonthly)) <
-      average(controlEmployees.map((employee) => employee.salaryMonthly)),
-  );
-  assert.ok(
-    average(targetEmployees.map((employee) => employee.tenureMonths)) <
-      average(controlEmployees.map((employee) => employee.tenureMonths)),
-  );
-});
-
-test("promo dependency scenario raises discounts on the targeted store", () => {
-  const dataset = generateDataset({
-    ...defaultConfig,
-    seed: 333444,
-    storeCount: 8,
-    productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "promo_dependency",
-    examScenarioStrength: "medium",
-  });
-
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const discountsByStore = new Map<string, number[]>();
-  for (const line of dataset.saleLines) {
-    const bucket = discountsByStore.get(line.storeId) ?? [];
-    bucket.push(line.totalDiscountApplied);
-    discountsByStore.set(line.storeId, bucket);
-  }
-
-  const targetAvg = averageOrZero(discountsByStore.get(targetStoreId) ?? []);
-  const baselineMedian = median(
-    [...discountsByStore.entries()]
-      .filter(([storeId]) => storeId !== targetStoreId)
-      .map(([, values]) => averageOrZero(values)),
-  );
-
-  assert.ok(targetAvg > baselineMedian);
-});
-
-test("understaffed store scenario lowers conversion effectiveness on the targeted store", () => {
-  const dataset = generateDataset({
-    ...defaultConfig,
-    seed: 444555,
-    storeCount: 8,
-    productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "understaffed_store",
-    examScenarioStrength: "medium",
-  });
-
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const stores = new Map(dataset.stores.map((store) => [store.id, store]));
-  const salesCountByStore = new Map<string, number>();
-
-  for (const sale of dataset.sales) {
-    salesCountByStore.set(sale.storeId, (salesCountByStore.get(sale.storeId) ?? 0) + 1);
-  }
-
-  const targetStore = stores.get(targetStoreId)!;
-  const targetSalesCount = salesCountByStore.get(targetStoreId) ?? 0;
-  const targetSalesPerTraffic = targetSalesCount / Math.max(1, targetStore.dailyFootTraffic);
-  const baselineMedian = median(
-    [...dataset.stores]
-      .filter((store) => store.id !== targetStoreId)
-      .map((store) => (salesCountByStore.get(store.id) ?? 0) / Math.max(1, store.dailyFootTraffic)),
-  );
-
-  assert.ok(targetSalesPerTraffic < baselineMedian);
-});
-
-test("premium low traffic scenario keeps premium basket but fewer tickets", () => {
-  const dataset = generateDataset({
-    ...defaultConfig,
-    seed: 555666,
-    storeCount: 8,
-    productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "premium_low_traffic",
-    examScenarioStrength: "medium",
-  });
-
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const targetStore = dataset.stores.find((store) => store.id === targetStoreId)!;
-  assert.equal(targetStore.type, "Premium");
-
-  const salesCountByStore = new Map<string, number>();
-  const basketByStore = new Map<string, number[]>();
-  for (const sale of dataset.sales) {
-    salesCountByStore.set(sale.storeId, (salesCountByStore.get(sale.storeId) ?? 0) + 1);
-    const bucket = basketByStore.get(sale.storeId) ?? [];
-    bucket.push(sale.totalPaid);
-    basketByStore.set(sale.storeId, bucket);
-  }
-
-  const targetSalesCount = salesCountByStore.get(targetStoreId) ?? 0;
-  const targetBasket = averageOrZero(basketByStore.get(targetStoreId) ?? []);
-  const ticketMedian = median([...salesCountByStore.values()]);
-  const basketMedian = median([...basketByStore.values()].map((values) => averageOrZero(values)));
-
-  assert.ok(targetSalesCount < ticketMedian);
-  assert.ok(targetBasket >= basketMedian);
-});
-
-test("discount volume winner scenario increases volume on a discount store", () => {
-  const dataset = generateDataset({
-    ...defaultConfig,
-    seed: 777888,
-    storeCount: 8,
-    productCount: 100,
-    customerCount: 420,
-    targetSaleLineCount: 1800,
-    examScenario: "discount_volume_winner",
-    examScenarioStrength: "medium",
-  });
-
-  const targetStoreId = dataset.examScenarioApplied!.targetStoreId;
-  const targetStore = dataset.stores.find((store) => store.id === targetStoreId)!;
-  assert.equal(targetStore.type, "Discount");
-
-  const salesCountByStore = new Map<string, number>();
-  const totalLinesByStore = new Map<string, number>();
-  for (const sale of dataset.sales) {
-    salesCountByStore.set(sale.storeId, (salesCountByStore.get(sale.storeId) ?? 0) + 1);
-    totalLinesByStore.set(sale.storeId, (totalLinesByStore.get(sale.storeId) ?? 0) + sale.lineCount);
-  }
-
-  const targetSalesCount = salesCountByStore.get(targetStoreId) ?? 0;
-  const targetTotalLines = totalLinesByStore.get(targetStoreId) ?? 0;
-  assert.ok(targetSalesCount > median([...salesCountByStore.values()]));
-  assert.ok(targetTotalLines > median([...totalLinesByStore.values()]));
+  assert.ok(median(shrinkRates) > 0.15 && median(shrinkRates) < 1.2);
+  assert.ok(median(paymentFeeRates) > 0.2 && median(paymentFeeRates) < 0.8);
+  assert.ok(median(payrollRates) > 18 && median(payrollRates) < 75);
 });

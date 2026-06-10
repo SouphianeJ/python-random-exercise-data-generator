@@ -1,4 +1,5 @@
 import { BRANDS } from "./constants";
+import { ensureStoreBlueprintRequirements } from "./performance";
 import { SeededRandom } from "./random";
 import type { GeneratorConfig, Store, StoreType } from "./types";
 
@@ -25,13 +26,7 @@ function buildRepresentativeStoreBlueprints(
   if (storeCount >= 2) {
     blueprints.push({ zone: "Peripherie", type: "Discount" });
   }
-  if (config.examScenario === "underperforming_sales_execution" && storeCount >= 3) {
-    blueprints.push({ zone: "Peripherie", type: "Discount" });
-  }
-  if (
-    storeCount >= 3 &&
-    !(config.examScenario === "underperforming_sales_execution" && blueprints.length >= storeCount)
-  ) {
+  if (storeCount >= 3) {
     blueprints.push({
       zone: rng.chance(0.55) ? "Centre-ville" : "Peripherie",
       type: "Standard",
@@ -50,7 +45,7 @@ function buildRepresentativeStoreBlueprints(
     blueprints.push({ zone, type });
   }
 
-  return shuffleInPlace(rng, blueprints);
+  return shuffleInPlace(rng, ensureStoreBlueprintRequirements(blueprints, config));
 }
 
 export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
@@ -70,9 +65,7 @@ export function generateStores(rng: SeededRandom, config: GeneratorConfig) {
               zone === "Centre-ville" ? Math.round(baseSurface * 0.95) : 110,
               zone === "Centre-ville" ? 130 : 180,
             )
-          : config.examScenario === "underperforming_sales_execution" && zone === "Peripherie"
-            ? rng.int(220, 310)
-            : rng.int(zone === "Centre-ville" ? 110 : 150, zone === "Centre-ville" ? 160 : 310);
+          : rng.int(zone === "Centre-ville" ? 110 : 150, zone === "Centre-ville" ? 160 : 310);
 
     const openToClientsHours =
       zone === "Centre-ville"
