@@ -1,4 +1,0 @@
-﻿store_id;zone;type;surface;hyper;specialty_brands;open_time;open_to_clients_hours;open_days;foot_traffic_by_hour;daily_foot_traffic;conversion_rate;traffic_conversion;avg_basket_value;monthly_revenue_est;num_employees
-S01;Centre-ville;Premium;50;non;['New Balance'];9;9h/18h;open 6/7;6;54;0,21;9;280;95256;5
-S02;Centre-ville;Premium;57;non;['Asics'];9;9h/18h;open 6/7;7;63;0,24;18;182;82555;5
-S03;Centre-ville;Standard;102;non;['Reebok', 'Nike'];9;9h/18h;open 5/7;17;153;0,14;18;167;107314;5
