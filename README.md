@@ -11,7 +11,7 @@ npm install
 npm run dev        # UI sur http://localhost:3000
 npm test           # suite de tests (moteur + invariants statistiques)
 npm run sample     # régénère les lots versionnés dans samples/
-npm run subjects   # régénère le classeur de sujets Excel
+npm run subjects   # régénère l'examen Excel (sujet étudiant + corrigé enseignant)
 ```
 
 ## Ce que produit le générateur
@@ -43,7 +43,11 @@ Chaque table existe aussi en `.xlsx`. La sémantique de chaque champ est documen
 
 - `POST /api/generate` — body JSON = config, renvoie le dataset complet.
 - `GET /api/export?file=ventes.csv&seed=32&...` — télécharge un fichier ; les datasets sont mis en cache par config (LRU).
-- `GET /api/subjects` — classeur de sujets Excel.
+- `GET /api/subjects` — classeur d'examen Excel (version étudiant, sans corrigé).
+
+## Examen noté
+
+`src/lib/subjects.ts` définit une étude de cas notée sur 20, à difficulté progressive (parties A→D : indicateurs de vente, performance des équipes, rentabilité, diagnostic RH/turnover et synthèse). Les énoncés ne référencent que des colonnes réellement exportées et indiquent quand une colonne (ex. `sale_total_ttc`, volontairement vide) doit être recalculée. `npm run subjects` produit `samples/sujets.xlsx` (à distribuer) et `samples/sujets-corrige.xlsx`, dont la feuille « Corrige enseignant » est **calculée depuis le dataset examen** (mêmes seed/config que `exam-underperforming-final`) : elle prouve que chaque question est solvable et montre que le magasin en turnover, malgré des remises et un marketing comparables aux autres, sous-performe par instabilité d'équipe (ancienneté faible, renouvellement élevé, CA par vendeur dégradé).
 
 ## Échantillons versionnés
 
