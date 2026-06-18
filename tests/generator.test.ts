@@ -7,7 +7,13 @@ import { exportBinaryFile, exportFiles } from "../src/lib/generator/export";
 import { generateDataset } from "../src/lib/generator/index";
 import { LOYALTY_POINT_VALUE_EUR } from "../src/lib/generator/economics";
 import type { GeneratorConfig } from "../src/lib/generator/types";
-import { buildSubjectsWorkbookBuffer, subjectPrompts } from "../src/lib/subjects";
+import {
+  buildSubjectsWorkbookBuffer,
+  computeAnswerKey,
+  examQuestions,
+  examSections,
+  examTotalPoints,
+} from "../src/lib/subjects";
 
 test("generator is deterministic for a given seed", () => {
   const config: GeneratorConfig = {
@@ -111,21 +117,60 @@ test("xlsx exports keep the same tables as csv exports", async () => {
   assert.equal(worksheet!.getRow(2).getCell(9).value, "");
 });
 
+test("exam barème totals 20 points and ids are unique", () => {
+  assert.equal(examTotalPoints, 20);
+  const ids = examQuestions.map((question) => question.id);
+  assert.equal(new Set(ids).size, ids.length);
+  // Difficulty is progressive: A facile, B/C intermédiaire, D avancé.
+  assert.equal(examSections[0].difficulty, "facile");
+  assert.equal(examSections[examSections.length - 1].difficulty, "avance");
+});
+
 test("subjects workbook is structured and student-ready", async () => {
   const workbookBuffer = await buildSubjectsWorkbookBuffer();
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(workbookBuffer as unknown as ArrayBuffer);
 
   const guide = workbook.getWorksheet("Consignes");
-  const answers = workbook.getWorksheet("Reponses");
+  const subject = workbook.getWorksheet("Sujet");
 
   assert.ok(guide);
-  assert.ok(answers);
-  assert.equal(guide!.getCell("A1").value, "Sujets Excel");
-  assert.equal(answers!.getRow(1).getCell(1).value, "theme");
-  assert.equal(answers!.rowCount, subjectPrompts.length + 1);
-  assert.equal(answers!.getRow(2).getCell(6).value, "");
-  assert.equal(answers!.getColumn(6).width, 22);
+  assert.ok(subject);
+  assert.equal(guide!.getCell("A1").value, "Étude de cas notée — Diagnostic d'un réseau de magasins");
+  assert.equal(subject!.getRow(1).getCell(1).value, "id");
+  // One header row + one row per question, no teacher key by default.
+  assert.equal(subject!.rowCount, examQuestions.length + 1);
+  assert.equal(subject!.getRow(2).getCell(9).value, "");
+  assert.equal(workbook.getWorksheet("Corrige enseignant"), undefined);
+});
+
+test("subjects workbook can embed a teacher answer key computed from data", async () => {
+  const dataset = generateDataset({
+    ...defaultConfig,
+    seed: 111222,
+    storeCount: 8,
+    productCount: 100,
+    customerCount: 420,
+    storePerformancePlan: [
+      { storeType: "Discount", performanceStatus: "sous_performant_turnover" },
+    ],
+  });
+
+  const key = computeAnswerKey(dataset);
+  assert.equal(key.stores.length, dataset.stores.length);
+  // The pedagogical target is the turnover store: it must run a deficit AND show
+  // the lowest seller tenure of the network (that is the demonstrable signal).
+  const target = key.stores.find((store) => store.storeId === key.targetStoreId);
+  assert.ok(target);
+  assert.ok(target!.annualResult < 0, "turnover target store should be in deficit");
+  const minTenure = Math.min(...key.stores.map((store) => store.averageTenureMonths));
+  assert.equal(target!.averageTenureMonths, minTenure, "turnover store should have lowest tenure");
+  assert.ok(target!.departures > 0 || target!.midYearHires > 0, "turnover store should show churn");
+
+  const workbookBuffer = await buildSubjectsWorkbookBuffer({ dataset });
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(workbookBuffer as unknown as ArrayBuffer);
+  assert.ok(workbook.getWorksheet("Corrige enseignant"));
 });
 
 test("vat and store-month charges are coherent", () => {
