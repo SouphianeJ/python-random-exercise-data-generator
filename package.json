@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "node --import tsx --test tests/generator.test.ts tests/patterns.test.ts",
     "sample": "tsx scripts/generate-representative-sample.ts",
-    "subjects": "tsx scripts/generate-subjects-workbook.ts"
+    "subjects": "tsx scripts/generate-subjects-workbook.ts",
+    "premium": "tsx scripts/generate-premium-case.ts"
   },
   "dependencies": {
     "exceljs": "^4.4.0",

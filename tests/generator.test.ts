@@ -14,6 +14,13 @@ import {
   examSections,
   examTotalPoints,
 } from "../src/lib/subjects";
+import {
+  buildPremiumDataset,
+  comparePremiumStores,
+  computePremiumAnswerKey,
+  premiumCaseQuestions,
+  premiumCaseTotalPoints,
+} from "../src/lib/premium-case";
 
 test("generator is deterministic for a given seed", () => {
   const config: GeneratorConfig = {
@@ -171,6 +178,48 @@ test("subjects workbook can embed a teacher answer key computed from data", asyn
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.load(workbookBuffer as unknown as ArrayBuffer);
   assert.ok(workbook.getWorksheet("Corrige enseignant"));
+});
+
+test("premium case: scenario yields two contrasting Premium stores", () => {
+  const dataset = buildPremiumDataset();
+  const premium = dataset.stores.filter((store) => store.type === "Premium");
+  assert.equal(premium.length, 2, "scenario must expose exactly two Premium stores");
+});
+
+test("premium case: retail identity reconstructs the CA gap and barème totals 20", () => {
+  assert.equal(premiumCaseTotalPoints, 20);
+  const ids = premiumCaseQuestions.map((q) => q.id);
+  assert.equal(new Set(ids).size, ids.length);
+
+  const dataset = buildPremiumDataset();
+  const cmp = comparePremiumStores(dataset);
+
+  // CA = trafic × transformation × panier : le produit des ratios doit
+  // reconstruire le ratio des CA (à l'arrondi près).
+  assert.ok(Math.abs(cmp.productOfRatios - cmp.caRatio) < 0.05, "decomposition must reconstruct CA ratio");
+
+  // H1 : le trafic est le levier dominant.
+  assert.ok(cmp.trafficRatio > cmp.conversionRatio, "traffic should dominate conversion");
+  assert.ok(cmp.trafficRatio > cmp.basketRatio, "traffic should dominate basket");
+  assert.ok(
+    cmp.trafficRatio > cmp.conversionRatio * cmp.basketRatio,
+    "traffic alone should outweigh combined commercial levers",
+  );
+
+  // H2 : l'écart persiste après normalisation (pas un effet de taille).
+  assert.ok(cmp.caPerM2Ratio > 1.5, "CA/m² gap should persist");
+  assert.ok(cmp.caPerSellerRatio > 1.5, "CA per seller gap should persist");
+  assert.ok(cmp.weak.surface <= cmp.strong.surface * 1.1, "weak store is not larger");
+});
+
+test("premium case: answer key covers every question", () => {
+  const dataset = buildPremiumDataset();
+  const key = computePremiumAnswerKey(dataset);
+  assert.equal(key.perQuestion.length, premiumCaseQuestions.length);
+  for (const question of premiumCaseQuestions) {
+    const entry = key.perQuestion.find((item) => item.id === question.id);
+    assert.ok(entry && entry.expected.length > 0, `missing answer for ${question.id}`);
+  }
 });
 
 test("vat and store-month charges are coherent", () => {

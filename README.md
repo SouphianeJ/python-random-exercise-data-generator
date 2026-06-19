@@ -39,6 +39,21 @@ Chaque table existe aussi en `.xlsx`. La sémantique de chaque champ est documen
 - **Plan de performance** : on peut imposer un statut par magasin (`superperformant` → `critique_turnover`). Les magasins en turnover ont une équipe renouvelée en cours d'année (prédécesseurs partis, successeurs embauchés) et finissent réellement déficitaires.
 - **Constantes économiques** centralisées dans `src/lib/generator/economics.ts` (TVA, valeur du point fidélité, taux patronaux, marketing).
 
+## Étude de cas « deux magasins Premium »
+
+`src/lib/premium-case.ts` est une seconde étude de cas notée (sur 20), indépendante, qui fait travailler **l'équation du commerce de détail** : `CA = trafic × taux de transformation × panier moyen`. Le scénario (seed figé) expose deux boutiques Premium de centre-ville de taille comparable mais au CA très différent ; l'élève décompose l'écart, vérifie que l'identité reconstruit le CA, puis teste deux hypothèses de pilotage :
+
+- **H1** — l'écart vient d'abord d'un déficit de **fréquentation** (trafic), plus que de la performance commerciale (transformation, panier). *Confirmée par les données.*
+- **H2** — « le petit magasin vend moins parce qu'il est plus petit ». *Réfutée* : l'écart persiste en CA/m² et CA/vendeur, donc sous-performance réelle.
+
+`npm run premium` génère trois classeurs dans `samples/premium-comparison/` — tous recalculés depuis un même dataset, donc cohérents par construction :
+
+| Fichier | Rôle |
+| --- | --- |
+| `premium_donnees.xlsx` | Données de travail (feuilles magasins, employes, ventes_exam, store_month_costs) |
+| `premium_sujet.xlsx` | Énoncé noté (Consignes + Sujet, colonne réponse vide) |
+| `premium_corrige.xlsx` | Corrigé enseignant (KPIs, réponses attendues par question, décomposition et verdict des hypothèses) |
+
 ## API
 
 - `POST /api/generate` — body JSON = config, renvoie le dataset complet.
