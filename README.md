@@ -39,6 +39,22 @@ Chaque table existe aussi en `.xlsx`. La sémantique de chaque champ est documen
 - **Plan de performance** : on peut imposer un statut par magasin (`superperformant` → `critique_turnover`). Les magasins en turnover ont une équipe renouvelée en cours d'année (prédécesseurs partis, successeurs embauchés) et finissent réellement déficitaires.
 - **Constantes économiques** centralisées dans `src/lib/generator/economics.ts` (TVA, valeur du point fidélité, taux patronaux, marketing).
 
+## Générateur de sujets pilotable depuis l'interface
+
+La page `/sujets` permet de produire un sujet noté **sans coder** : on choisit un *gabarit*, on règle les paramètres, on fait **proposer des seeds intéressants** (le serveur balaie une plage et classe les tirages par intérêt pédagogique), puis on télécharge **sujet / données / corrigé**.
+
+Les gabarits sont déclarés dans `src/lib/subject-templates/` derrière un contrat commun `SubjectTemplate` (`buildConfig`, `evaluate`, `buildFiles`) et enregistrés dans `registry.ts` :
+
+| Gabarit | Description |
+| --- | --- |
+| `comparaison` | Compare deux magasins du **même type** (paramètre `storeType` : Premium / Standard / Discount) via l'équation `CA = trafic × transformation × panier`. « 2 Premium » et « 2 Discount » sont le même gabarit, juste un paramètre. |
+| `diagnostic-reseau` | Examen réseau « promotions vs turnover » (enveloppe `src/lib/subjects.ts`). |
+
+API associée :
+- `GET /api/subjects/templates` — métadonnées des gabarits (pour l'UI).
+- `GET /api/subjects/seeds?template=…&storeType=…&from=1&to=60` — seeds candidats classés, avec aperçu (ratios, verdict d'hypothèses).
+- `GET /api/subjects/build?template=…&seed=…&file=sujet|donnees|corrige` — télécharge un classeur.
+
 ## Étude de cas « deux magasins Premium »
 
 `src/lib/premium-case.ts` est une seconde étude de cas notée (sur 20), indépendante, qui fait travailler **l'équation du commerce de détail** : `CA = trafic × taux de transformation × panier moyen`. Le scénario (seed figé) expose deux boutiques Premium de centre-ville de taille comparable mais au CA très différent ; l'élève décompose l'écart, vérifie que l'identité reconstruit le CA, puis teste deux hypothèses de pilotage :

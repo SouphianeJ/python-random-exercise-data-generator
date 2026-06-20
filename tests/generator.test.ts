@@ -21,6 +21,8 @@ import {
   premiumCaseQuestions,
   premiumCaseTotalPoints,
 } from "../src/lib/premium-case";
+import { getTemplate, listTemplateInfos, subjectTemplates } from "../src/lib/subject-templates/registry";
+import { searchSeeds } from "../src/lib/subject-templates/seed-search";
 
 test("generator is deterministic for a given seed", () => {
   const config: GeneratorConfig = {
@@ -220,6 +222,53 @@ test("premium case: answer key covers every question", () => {
     const entry = key.perQuestion.find((item) => item.id === question.id);
     assert.ok(entry && entry.expected.length > 0, `missing answer for ${question.id}`);
   }
+});
+
+test("subject templates: registry exposes serializable metadata", () => {
+  const infos = listTemplateInfos();
+  assert.ok(infos.length >= 2);
+  for (const info of infos) {
+    assert.ok(info.id && info.label && info.description);
+    assert.ok(Array.isArray(info.params) && info.params.length > 0);
+  }
+  assert.ok(getTemplate("comparaison"));
+  assert.ok(getTemplate("diagnostic-reseau"));
+  assert.equal(getTemplate("inconnu"), undefined);
+});
+
+test("subject templates: comparison template builds three coherent files", async () => {
+  const template = getTemplate("comparaison")!;
+  const files = await template.buildFiles({ storeType: "Premium", storeCount: 9, seed: 30 });
+  const kinds = files.map((file) => file.kind).sort();
+  assert.deepEqual(kinds, ["corrige", "donnees", "sujet"]);
+  for (const file of files) {
+    assert.ok(file.buffer.length > 0, `${file.name} should not be empty`);
+    assert.ok(file.name.startsWith("premium_"));
+  }
+});
+
+test("subject templates: comparison works for a Discount pairing too", () => {
+  const template = getTemplate("comparaison")!;
+  // Discount stores are common, so a small seed window should surface a usable draw.
+  const candidates = searchSeeds(template, { storeType: "Discount", storeCount: 9 }, { from: 1, to: 20, limit: 3 });
+  assert.ok(candidates.length >= 1, "expected at least one Discount comparison candidate");
+  assert.ok(candidates[0].score > 0);
+  assert.ok("ratio_trafic" in candidates[0].summary);
+});
+
+test("subject templates: network template evaluates and builds files", async () => {
+  const template = getTemplate("diagnostic-reseau")!;
+  const candidates = searchSeeds(template, {}, { from: 111222, to: 111222, limit: 1 });
+  assert.equal(candidates.length, 1);
+  assert.ok(candidates[0].summary.magasin_cible);
+
+  const files = await template.buildFiles({ seed: 111222, storeCount: 8, productCount: 100, customerCount: 420 });
+  assert.deepEqual(files.map((file) => file.kind).sort(), ["corrige", "donnees", "sujet"]);
+});
+
+test("subject templates: every template id is unique", () => {
+  const ids = subjectTemplates.map((template) => template.id);
+  assert.equal(new Set(ids).size, ids.length);
 });
 
 test("vat and store-month charges are coherent", () => {
