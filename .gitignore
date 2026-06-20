@@ -5,3 +5,6 @@ dist
 *.log
 *.tsbuildinfo
 old_original_script/
+
+# scratch exploration scripts (not versioned)
+scripts/_*.ts
